@@ -1,0 +1,57 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  _id: ID!
+  email: String!
+  fullname: String!
+  user_type: Float!
+  isActive: String!
+  isBlocked: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type AuthResponse {
+  token: String!
+  user: User!
+}
+
+type Query {
+  borra1(createUserInput: CreateUserInput!): User!
+  borra2(createUserInput: CreateUserInput!): User!
+
+  """Desarrollo solo, para comprobar token"""
+  revisarToken: AuthResponse!
+}
+
+input CreateUserInput {
+  fullname: String!
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  """Crea un usuario"""
+  createUsers(addUser: SignupInput!): AuthResponse!
+
+  """Logea un usuario validado"""
+  login(login: LoginInput!): AuthResponse!
+}
+
+input SignupInput {
+  fullname: String!
+  email: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
