@@ -23,12 +23,27 @@ type AuthResponse {
   user: User!
 }
 
+type Category {
+  _id: ID!
+  name: String!
+  image: String
+  isActive: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   borra1(createUserInput: CreateUserInput!): User!
   borra2(createUserInput: CreateUserInput!): User!
 
+  """Logea un usuario validado"""
+  login(login: LoginInput!): AuthResponse!
+
   """Desarrollo solo, para comprobar token"""
   revisarToken: AuthResponse!
+
+  """Trae todas las categorias"""
+  getAllcategory: [Category!]!
 }
 
 input CreateUserInput {
@@ -37,12 +52,17 @@ input CreateUserInput {
   password: String!
 }
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
 type Mutation {
   """Crea un usuario"""
   createUsers(addUser: SignupInput!): AuthResponse!
 
-  """Logea un usuario validado"""
-  login(login: LoginInput!): AuthResponse!
+  """Permite al adm agregar categoria"""
+  addCategory(createCategoryInput: CreateCategoryInput!): Category!
 }
 
 input SignupInput {
@@ -51,7 +71,7 @@ input SignupInput {
   password: String!
 }
 
-input LoginInput {
-  email: String!
-  password: String!
+input CreateCategoryInput {
+  name: String!
+  image: String
 }

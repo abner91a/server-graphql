@@ -26,7 +26,7 @@ export class AuthResolver {
   //   return this.authService.findAll();
   // }
 
-  @Mutation(() => AuthResponse, {
+  @Query(() => AuthResponse, {
     name: 'login',
     description: 'Logea un usuario validado',
   })
