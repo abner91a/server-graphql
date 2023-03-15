@@ -48,14 +48,17 @@ export class Category extends Document {
     default: Date.now,
   })
   @Field(() => Date)
-  createdAt: boolean;
+  createdAt: Date;
 
   @Prop({
     type: Date,
     default: Date.now,
   })
   @Field(() => Date)
-  updatedAt: boolean;
+  updatedAt: Date;
+
+  @Field(() => String, {nullable: true, description: "Solo para obtener la imagen con cdn"})
+  imageCDN: string;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);

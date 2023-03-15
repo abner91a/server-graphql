@@ -1,46 +1,94 @@
-import { Injectable, UseGuards } from '@nestjs/common';
+import { CategoryFilterException } from './../../common/filters/category.filter';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 import { CreateCategoryInput } from './dto/create-category.input';
 import { UpdateCategoryInput } from './dto/update-category.input';
 import { Category } from './entities/category.entity';
 
-@UseGuards(JwtAuthGuard)
 @Injectable()
 export class CategoryService {
-
   constructor(
     @InjectModel(Category.name)
     private readonly categoryModel: Model<Category>,
   ) {}
 
-
-  async createCategory(createCategoryInput: CreateCategoryInput):Promise<Category> {
+  async createCategory(
+    createCategoryInput: CreateCategoryInput,
+  ): Promise<Category> {
     const categoria = await this.categoryModel.create({
       _id: new mongoose.Types.ObjectId(),
       ...createCategoryInput,
     });
     return categoria;
-  
   }
 
-  async findAll():Promise<Category[]> {
-    
-    const categoria = await this.categoryModel.find()
+  async findAll(): Promise<Category[]> {
+    // const categoria = await this.categoryModel.find();
+
+    const categoria = await this.categoryModel.aggregate([
+      { $match: { isActive: true } },
+      { $project: this.aggregateProject() },
+    ]);
+
+    console.log(categoria);
 
     return categoria;
   }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} category`;
-  // }
+  async findCategoryById(id: string): Promise<Category> {
+    const category = await this.categoryModel.findById(id);
 
-  // update(id: number, updateCategoryInput: UpdateCategoryInput) {
-  //   return `This action updates a #${id} category`;
-  // }
+    if (!category) CategoryFilterException.prototype.handlerDBError(null, 1);
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} category`;
-  // }
+    return category;
+  }
+
+  async updateCategory(
+    updateCategoryInput: UpdateCategoryInput,
+  ): Promise<Category> {
+    const category = await this.findCategoryById(updateCategoryInput.id);
+
+    category.name = updateCategoryInput.name;
+    category.updatedAt = new Date();
+    category.isActive = updateCategoryInput.isActive;
+
+    if (updateCategoryInput.image !== undefined) {
+      category.image = updateCategoryInput.image;
+    }
+    //Todo cache: Guardar en el cache
+    category.save();
+
+    return category;
+  }
+
+  async findByCategoryId(id): Promise<Category[]> {
+    // const categoria = await this.categoryModel.find();
+    console.log(id);
+    const categoria = await this.categoryModel.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(id) } },
+      { $project: this.aggregateProject() },
+    ]);
+
+    // console.log(categoria)
+
+    return categoria[0];
+  }
+
+  private aggregateProject() {
+    return {
+      _id: 1,
+      name: 1,
+      image: 1,
+      imageCDN: {
+        $concat: [process.env.CDN, process.env.Category_CDN, '$image'],
+      },
+      booksCount: 1,
+      isActive: 1,
+      createdAt: 1,
+      updatedAt: 1,
+    };
+  }
+
+
 }

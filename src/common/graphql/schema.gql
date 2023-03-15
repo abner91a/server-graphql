@@ -30,6 +30,9 @@ type Category {
   isActive: String!
   createdAt: DateTime!
   updatedAt: DateTime!
+
+  """Solo para obtener la imagen con cdn"""
+  imageCDN: String
 }
 
 type Query {
@@ -44,6 +47,9 @@ type Query {
 
   """Trae todas las categorias"""
   getAllcategory: [Category!]!
+
+  """Trare una categoria"""
+  getIdcategory(id: ID!): Category!
 }
 
 input CreateUserInput {
@@ -63,6 +69,9 @@ type Mutation {
 
   """Permite al adm agregar categoria"""
   addCategory(createCategoryInput: CreateCategoryInput!): Category!
+
+  """Permite al adm actualizar la categoria"""
+  updateCategory(createCategoryInput: UpdateCategoryInput!): Category!
 }
 
 input SignupInput {
@@ -74,4 +83,13 @@ input SignupInput {
 input CreateCategoryInput {
   name: String!
   image: String
+}
+
+input UpdateCategoryInput {
+  name: String
+  image: String
+  id: String!
+
+  """Permite desactivar alguna categoria"""
+  isActive: Boolean
 }
