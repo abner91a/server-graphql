@@ -12,11 +12,14 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './schema/users/users.module';
 import { CategoryModule } from './schema/category/category.module';
 import { UploadModule } from './api/upload/upload.module';
+import { BookModule } from './schema/book/book.module';
+import GraphQLJSON, { GraphQLJSONObject  } from 'graphql-type-json';
 @Module({
   imports: [
     ConfigModule.forRoot({  isGlobal: true }),
     MongooseModule.forRoot(process.env.MONGO_DB),
     GraphQLModule.forRoot<ApolloDriverConfig>({
+      // resolvers: { JSON: GraphQLJSON, JSONObject: GraphQLJSONObject },
       driver: ApolloDriver,
       // introspection: false ,
       autoSchemaFile: join(process.cwd(), 'src/common/graphql/schema.gql'),
@@ -24,12 +27,13 @@ import { UploadModule } from './api/upload/upload.module';
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       includeStacktraceInErrorResponses: process.env.NODE_ENV !== 'Lanzamiento'
-
     }),
+
     UsersModule,
     AuthModule,
     CategoryModule,
     UploadModule,
+    BookModule,
   ],
   controllers: [AppController],
   providers: [AppService],

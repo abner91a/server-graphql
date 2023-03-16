@@ -36,14 +36,14 @@ export class UploadController {
       fileFilter: fileFilter,
        limits: { fileSize: 2097152 }, //En bytes https://convertlive.com/es/u/convertir/megabytes/a/bytes#2
       storage: diskStorage({
-        destination: './public/img/category',
+        destination: './public/images/category',
         filename: fileNamer,
       }),
     }),
   )
   async create(
     @Param('id', ParseMongoIdPipe) id: string,
-    @CurrentUser(ValidUser_type.admin) user: User,
+    @CurrentUser(ValidUser_type.user) user: User,
     @UploadedFile() file: Express.Multer.File,
   ) {
     return await this.uploadService.uploadFileCategory(id, file);

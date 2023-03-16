@@ -35,6 +35,33 @@ type Category {
   imageCDN: String
 }
 
+type Catype {
+  _id: ID!
+  name: String!
+}
+
+type Book {
+  _id: ID!
+  authorId: ID!
+  title: String!
+  description: String
+  image: String
+  categories: [Catype!]
+  isActive: Boolean!
+  isApproved: Boolean!
+  isBlocked: Boolean!
+  avgRating: Float!
+  ratingCounts: Float!
+  reviewCounts: Float!
+  commentCounts: Float!
+  totalComments: Float!
+  total_chapters: Float!
+  views: Float!
+  authorName: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   borra1(createUserInput: CreateUserInput!): User!
   borra2(createUserInput: CreateUserInput!): User!
@@ -72,6 +99,14 @@ type Mutation {
 
   """Permite al adm actualizar la categoria"""
   updateCategory(createCategoryInput: UpdateCategoryInput!): Category!
+
+  """Permite al usuario agregar un libro"""
+  addBook(addBookUser: CreateBookInput!): Book!
+
+  """
+  Permite al usuario actualizar su libro, esta validado que solo el autor quien creo el libro pueda actualizarlo
+  """
+  updateBook(updateBookInput: UpdateBookInput!): Book!
 }
 
 input SignupInput {
@@ -92,4 +127,22 @@ input UpdateCategoryInput {
 
   """Permite desactivar alguna categoria"""
   isActive: Boolean
+}
+
+input CreateBookInput {
+  title: String!
+  description: String
+  categories: [JSONObject!]!
+}
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
+input UpdateBookInput {
+  title: String
+  description: String
+  categories: [JSONObject!]
+  id: String!
 }

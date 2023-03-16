@@ -44,6 +44,22 @@ export class CategoryService {
     return category;
   }
 
+
+  async categoryMultipleId(query){
+    // const category = await this.categoryModel.findById(id);
+
+    // if (!category) CategoryFilterException.prototype.handlerDBError(null, 1);
+
+    // console.log(query)
+
+    const catergory = await this.categoryModel.find(query)
+
+       if (!catergory.length) CategoryFilterException.prototype.handlerDBError(null, 1);
+
+
+    return catergory;
+  }
+
   async updateCategory(
     updateCategoryInput: UpdateCategoryInput,
   ): Promise<Category> {
@@ -62,7 +78,7 @@ export class CategoryService {
     return category;
   }
 
-  async findByCategoryId(id): Promise<Category[]> {
+  async findByCategoryId(id): Promise<Category[]> { 
     // const categoria = await this.categoryModel.find();
     // console.log(id);
     const categoria = await this.categoryModel.aggregate([
