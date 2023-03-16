@@ -62,6 +62,11 @@ type Book {
   updatedAt: DateTime!
 }
 
+type BookListResponse {
+  book: [Book!]!
+  totalPagina: Float!
+}
+
 type Query {
   borra1(createUserInput: CreateUserInput!): User!
   borra2(createUserInput: CreateUserInput!): User!
@@ -77,6 +82,9 @@ type Query {
 
   """Trare una categoria"""
   getIdcategory(id: ID!): Category!
+
+  """Obtiene la lista de libros con query solo para usuarios"""
+  getAllBook(query: QueryArgs!): BookListResponse!
 }
 
 input CreateUserInput {
@@ -88,6 +96,15 @@ input CreateUserInput {
 input LoginInput {
   email: String!
   password: String!
+}
+
+input QueryArgs {
+  page: Int!
+  perPage: Int!
+  categoryId: String!
+
+  """views,avgRating"""
+  sort: String
 }
 
 type Mutation {
@@ -106,7 +123,7 @@ type Mutation {
   """
   Permite al usuario actualizar su libro, esta validado que solo el autor quien creo el libro pueda actualizarlo
   """
-  updateBook(updateBookInput: UpdateBookInput!): Book!
+  updateBookUser(updateBookInput: UpdateBookInput!): Book!
 }
 
 input SignupInput {

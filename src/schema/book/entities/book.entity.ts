@@ -153,6 +153,8 @@ export class Book extends Document {
   })
   @Field(() => Date)
   updatedAt: Date;
+
+  //isCompleted Todo agregar
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);
