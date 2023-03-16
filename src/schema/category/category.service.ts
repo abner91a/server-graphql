@@ -31,7 +31,7 @@ export class CategoryService {
       { $project: this.aggregateProject() },
     ]);
 
-    console.log(categoria);
+    // console.log(categoria);
 
     return categoria;
   }
@@ -64,7 +64,7 @@ export class CategoryService {
 
   async findByCategoryId(id): Promise<Category[]> {
     // const categoria = await this.categoryModel.find();
-    console.log(id);
+    // console.log(id);
     const categoria = await this.categoryModel.aggregate([
       { $match: { _id: new mongoose.Types.ObjectId(id) } },
       { $project: this.aggregateProject() },
@@ -75,13 +75,20 @@ export class CategoryService {
     return categoria[0];
   }
 
+
+  async findByIdUpdate(id:string,file):Promise<Category>{
+    // console.log(file)
+    return await this.categoryModel.findByIdAndUpdate(id, { image: file.filename, updatedAt:new Date()    } )
+  }
+
+
   private aggregateProject() {
     return {
       _id: 1,
       name: 1,
       image: 1,
       imageCDN: {
-        $concat: [process.env.CDN, process.env.Category_CDN, '$image'],
+        $concat: [process.env.CDN_CATEGORIA_IMG, '$image'],
       },
       booksCount: 1,
       isActive: 1,

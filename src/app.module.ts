@@ -11,6 +11,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './schema/users/users.module';
 import { CategoryModule } from './schema/category/category.module';
+import { UploadModule } from './api/upload/upload.module';
 @Module({
   imports: [
     ConfigModule.forRoot({  isGlobal: true }),
@@ -28,6 +29,7 @@ import { CategoryModule } from './schema/category/category.module';
     UsersModule,
     AuthModule,
     CategoryModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
