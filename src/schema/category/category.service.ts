@@ -106,6 +106,7 @@ export class CategoryService {
       imageCDN: {
         $concat: [process.env.CDN_CATEGORIA_IMG, '$image'],
       },
+      // isCompleted: 1,
       booksCount: 1,
       isActive: 1,
       createdAt: 1,

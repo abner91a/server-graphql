@@ -161,6 +161,13 @@ export class Book extends Document {
   @Field(() => Boolean)
   isCompleted: boolean;
 
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  @Field(() => Boolean)
+  isPublished: boolean;
+
   @Field(() => String, {nullable: true, description: "Solo para obtener la imagen con cdn"})
   imageCDN: string;
 

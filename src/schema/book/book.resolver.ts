@@ -40,7 +40,7 @@ export class BookResolver {
     @Args('updateBookInput') updateBookInput: UpdateBookInput,
   ) {
     //Todo Validar que el titulo no exista en la BD
-    return this.bookService.update(updateBookInput.id, updateBookInput, user);
+    return this.bookService.update(updateBookInput, user);
   }
 
   @Query(() => BookListResponse, { name: 'getAllBook', description: 'Obtiene la lista de libros con query solo para usuarios' })

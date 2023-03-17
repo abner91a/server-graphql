@@ -61,6 +61,7 @@ type Book {
   createdAt: DateTime!
   updatedAt: DateTime!
   isCompleted: Boolean!
+  isPublished: Boolean!
 
   """Solo para obtener la imagen con cdn"""
   imageCDN: String
@@ -166,4 +167,10 @@ input UpdateBookInput {
   description: String
   categories: [JSONObject!]
   id: String!
+
+  """Si true y no false"""
+  publicar: String
+
+  """Si true y no false"""
+  completado: String
 }

@@ -29,6 +29,12 @@ import {
         });
       }
   
+      if (code === 4) {
+        throw new BadRequestException('Error: El titulo del libro existe usa otro nombre', {
+          cause: new Error(),
+          description: 'Nombre del titulo usado',
+        });
+      }
   
       console.log(error);
   

@@ -45,10 +45,15 @@ export class BookService {
     return categoriaCreada;
   }
 
-  async update(id: string, updateBookInput: UpdateBookInput, user: User) {
-    const book = await this.findByIdBook(id);
+  async update(updateBookInput: UpdateBookInput, user: User) {
+    if (updateBookInput.title) {
+      const existeTitulo = await this.bookModel.findOne({
+        title: updateBookInput.title,
+      });
+      if (existeTitulo) BookFilterException.prototype.handlerDBError(null, 4);
+    }
 
-    // console.log(book.authorId.toString(),user._id)
+    const book = await this.findByIdBook(updateBookInput.id);
 
     if (book.authorId.toString() !== user._id.toString())
       BookFilterException.prototype.handlerDBError(null, 3);
@@ -59,11 +64,24 @@ export class BookService {
       book.categories = updateBookInput.categories;
     if (updateBookInput.title) book.title = updateBookInput.title;
 
+    if (updateBookInput.publicar) {
+      if (updateBookInput.publicar === 'si') book.isPublished = true;
+      if (updateBookInput.publicar === 'no') book.isPublished = false;
+    }
+    if (updateBookInput.completado) {
+      if (updateBookInput.completado === 'si') book.isPublished = true;
+      if (updateBookInput.completado === 'no') book.isPublished = false;
+    }
+
     book.updatedAt = new Date();
 
     if (!book) BookFilterException.prototype.handlerDBError(null, 2);
 
+    console.log(book);
+
     book.save();
+
+    // console.log(book)
 
     return book;
   }
@@ -104,7 +122,7 @@ export class BookService {
       { $sort: sortData },
       { $skip: (page - 1) * perPage },
       { $limit: perPage },
-      { $project: this.aggregateProject() }
+      { $project: this.aggregateProject() },
     ]);
 
     const totalPagina = Math.ceil(contador / perPage);
@@ -115,17 +133,17 @@ export class BookService {
     };
   }
 
-
   private aggregateProject() {
     return {
       _id: 1,
       authorId: 1,
-      title:1,
+      title: 1,
       description: 1,
       image: 1,
-      imageCDN: {
-        $concat: [process.env.CDN_LIBRO_IMG, '$image'],
-      },
+      // imageCDN: {
+      //   $concat: [process.env.CDN_LIBRO_IMG, '$image'],
+      // },
+      imageCDN: 1,
       categories: 1,
       isApproved: 1,
       isBlocked: 1,
@@ -137,11 +155,12 @@ export class BookService {
       total_chapters: 1,
       views: 1,
       authorName: 1,
-// isCompleted:1,
+      isCompleted: 1,
       booksCount: 1,
       isActive: 1,
       createdAt: 1,
       updatedAt: 1,
+      isPublished: 1,
     };
   }
 
