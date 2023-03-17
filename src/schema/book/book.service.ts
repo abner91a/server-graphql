@@ -76,7 +76,7 @@ export class BookService {
     return book;
   }
 
-  async findAllQuery(query: QueryArgs):Promise<BookListResponse>{
+  async findAllQuery(query: QueryArgs): Promise<BookListResponse> {
     const { page, perPage, categoryId, sort } = query;
 
     let queryBook = {
@@ -96,7 +96,7 @@ export class BookService {
       sortData = { createdAt: -1 };
     }
 
-     const contador = await this.bookModel.count(queryBook)
+    const contador = await this.bookModel.count(queryBook);
 
     // console.log(sortData);
     const book = await this.bookModel.aggregate([
@@ -104,18 +104,45 @@ export class BookService {
       { $sort: sortData },
       { $skip: (page - 1) * perPage },
       { $limit: perPage },
-    
+      { $project: this.aggregateProject() }
     ]);
 
+    const totalPagina = Math.ceil(contador / perPage);
 
-      const totalPagina = Math.ceil(contador/perPage)
-
-  
     return {
-       book,
-       totalPagina
+      book,
+      totalPagina,
     };
+  }
 
+
+  private aggregateProject() {
+    return {
+      _id: 1,
+      authorId: 1,
+      title:1,
+      description: 1,
+      image: 1,
+      imageCDN: {
+        $concat: [process.env.CDN_LIBRO_IMG, '$image'],
+      },
+      categories: 1,
+      isApproved: 1,
+      isBlocked: 1,
+      avgRating: 1,
+      ratingCounts: 1,
+      reviewCounts: 1,
+      commentCounts: 1,
+      totalComments: 1,
+      total_chapters: 1,
+      views: 1,
+      authorName: 1,
+// isCompleted:1,
+      booksCount: 1,
+      isActive: 1,
+      createdAt: 1,
+      updatedAt: 1,
+    };
   }
 
   // remove(id: number) {

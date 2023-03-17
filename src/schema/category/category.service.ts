@@ -44,18 +44,17 @@ export class CategoryService {
     return category;
   }
 
-
-  async categoryMultipleId(query){
+  async categoryMultipleId(query) {
     // const category = await this.categoryModel.findById(id);
 
     // if (!category) CategoryFilterException.prototype.handlerDBError(null, 1);
 
     // console.log(query)
 
-    const catergory = await this.categoryModel.find(query)
+    const catergory = await this.categoryModel.find(query);
 
-       if (!catergory.length) CategoryFilterException.prototype.handlerDBError(null, 1);
-
+    if (!catergory.length)
+      CategoryFilterException.prototype.handlerDBError(null, 1);
 
     return catergory;
   }
@@ -78,7 +77,7 @@ export class CategoryService {
     return category;
   }
 
-  async findByCategoryId(id): Promise<Category[]> { 
+  async findByCategoryId(id): Promise<Category[]> {
     // const categoria = await this.categoryModel.find();
     // console.log(id);
     const categoria = await this.categoryModel.aggregate([
@@ -91,12 +90,13 @@ export class CategoryService {
     return categoria[0];
   }
 
-
-  async findByIdUpdate(id:string,file):Promise<Category>{
+  async findByIdUpdate(id: string, file): Promise<Category> {
     // console.log(file)
-    return await this.categoryModel.findByIdAndUpdate(id, { image: file.filename, updatedAt:new Date()    } )
+    return await this.categoryModel.findByIdAndUpdate(id, {
+      image: `category/${file.filename}`,
+      updatedAt: new Date(),
+    });
   }
-
 
   private aggregateProject() {
     return {
@@ -112,6 +112,4 @@ export class CategoryService {
       updatedAt: 1,
     };
   }
-
-
 }

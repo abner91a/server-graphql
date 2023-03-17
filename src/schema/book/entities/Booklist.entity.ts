@@ -77,6 +77,9 @@ export class BookList {
   @Field(() => Number, { nullable: true })
   totalPage: number;
 
+  @Field(() => String, {nullable: true, description: "Solo para obtener la imagen con cdn"})
+  imageCDN: string;
+
 
   //isCompleted Todo agregar
 }

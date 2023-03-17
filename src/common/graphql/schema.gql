@@ -60,6 +60,10 @@ type Book {
   authorName: String
   createdAt: DateTime!
   updatedAt: DateTime!
+  isCompleted: Boolean!
+
+  """Solo para obtener la imagen con cdn"""
+  imageCDN: String
 }
 
 type BookListResponse {

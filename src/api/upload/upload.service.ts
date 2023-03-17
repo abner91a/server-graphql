@@ -21,7 +21,7 @@ export class UploadService {
 
     const categoria = await this.categoryService.findByIdUpdate(id, file);
 
-    categoria.image = file.filename;
+    categoria.image = `category/${file.filename}`;
 
     const bunny = new BunnyCDNStorage(
       process.env.IMAGEN_KEY,

@@ -45,7 +45,7 @@ export class Book extends Document {
 
   @Prop({
     type: String,
-    default: 'https://mi-app-favorita.b-cdn.net/book/img_no_data_found.png',
+    default: 'book/img_no_data_found.png',
   })
   @Field(() => String, { nullable: true })
   image: string;
@@ -153,6 +153,16 @@ export class Book extends Document {
   })
   @Field(() => Date)
   updatedAt: Date;
+
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  @Field(() => Boolean)
+  isCompleted: boolean;
+
+  @Field(() => String, {nullable: true, description: "Solo para obtener la imagen con cdn"})
+  imageCDN: string;
 
   //isCompleted Todo agregar
 }
