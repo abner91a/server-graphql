@@ -35,6 +35,14 @@ import {
           description: 'Nombre del titulo usado',
         });
       }
+
+      if (code === 5) {
+        throw new BadRequestException('Error: No tienes permiso para actualizar este libro solo administrador', {
+          cause: new Error(),
+          description: 'Solo administrador puede cambiar este dato',
+
+        });
+      }
   
       console.log(error);
   

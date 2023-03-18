@@ -90,6 +90,9 @@ type Query {
 
   """Obtiene la lista de libros con query solo para usuarios"""
   getAllBook(query: QueryArgs!): BookListResponse!
+
+  """Trae un libro por id"""
+  getBookId(query: QueryArgsBook!): [Book!]!
 }
 
 input CreateUserInput {
@@ -110,6 +113,10 @@ input QueryArgs {
 
   """views,avgRating"""
   sort: String
+}
+
+input QueryArgsBook {
+  idNovel: String!
 }
 
 type Mutation {
@@ -173,4 +180,10 @@ input UpdateBookInput {
 
   """Si true y no false"""
   completado: String
+
+  """Si true y no false"""
+  bloquearLibro: String
+
+  """Si true y no false"""
+  activo: String
 }

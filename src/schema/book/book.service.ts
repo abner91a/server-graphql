@@ -1,3 +1,4 @@
+import { QueryArgsBook } from './dto/args/queryOnebook.book.args';
 import { createReadStream } from 'fs';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -46,6 +47,22 @@ export class BookService {
   }
 
   async update(updateBookInput: UpdateBookInput, user: User) {
+    const getCategoryId = updateBookInput.categories.forEach(
+      (category: any) => {
+        if (!isValidObjectId(category._id)) {
+          throw new BadRequestException(
+            `${category._id} de la categoria no es valida  `,
+          );
+        }
+      },
+    );
+
+    for (let i = 0; i < updateBookInput.categories.length; i++) {
+      const hola = await this.categoryService.categoryMultipleId(
+        updateBookInput.categories[i],
+      );
+    }
+
     if (updateBookInput.title) {
       const existeTitulo = await this.bookModel.findOne({
         title: updateBookInput.title,
@@ -57,6 +74,15 @@ export class BookService {
 
     if (book.authorId.toString() !== user._id.toString())
       BookFilterException.prototype.handlerDBError(null, 3);
+
+    if (updateBookInput.bloquearLibro) {
+      if (user.user_type === 2) {
+        this.actualizarAdm(book, updateBookInput);
+        // console.log(book)
+      } else {
+        BookFilterException.prototype.handlerDBError(null, 3);
+      }
+    }
 
     if (updateBookInput.description)
       book.description = updateBookInput.description;
@@ -77,7 +103,7 @@ export class BookService {
 
     if (!book) BookFilterException.prototype.handlerDBError(null, 2);
 
-    console.log(book);
+    // console.log(book);
 
     book.save();
 
@@ -133,6 +159,56 @@ export class BookService {
     };
   }
 
+
+  
+  async getBookDetail(query:QueryArgsBook){
+    // const book = await this.findByIdBook(query.idNovel);
+    // console.log(book)
+
+    let queryBook = { '_id':new mongoose.Types.ObjectId(query.idNovel) };
+
+
+    //Traer los capitulos de los libros
+
+    const book = await this.bookModel.aggregate([
+      { $match: queryBook },
+      // { $sort: sortData },
+      // { $skip: (page - 1) * perPage },
+      // { $limit: perPage },
+      { $project: this.aggregateProject() },
+    ]);
+
+    console.log(book)
+
+    if (!book.length) BookFilterException.prototype.handlerDBError(null, 1);
+    // console.log(book);
+
+    return book;
+  }
+
+
+  //TODO ME GUSTA EL LIBRO
+  //CREAR REPORTAR LIBRO
+
+
+  private actualizarAdm(book: Book, updateBookInput: UpdateBookInput): Book {
+    if (updateBookInput.bloquearLibro === 'si') book.isBlocked = true;
+    if (updateBookInput.bloquearLibro === 'no') book.isBlocked = false;
+    if (updateBookInput.activo === 'si') {
+      book.isActive = true;
+    }
+    if (updateBookInput.activo === 'no') {
+      book.isActive = false;
+      book.isPublished = false;
+    }
+
+    return book;
+  }
+
+  // remove(id: number) {
+  //   return `This action removes a #${id} book`;
+  // }
+
   private aggregateProject() {
     return {
       _id: 1,
@@ -163,8 +239,4 @@ export class BookService {
       isPublished: 1,
     };
   }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} book`;
-  // }
 }

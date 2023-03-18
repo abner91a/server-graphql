@@ -18,4 +18,17 @@ export class UpdateBookInput extends PartialType(CreateBookInput) {
   @IsOptional()
   @IsString()
   completado: string;
+
+  @Field(() => String, {nullable: true,description:"Si true y no false"})
+  @IsOptional()
+  @IsString()
+  bloquearLibro: string;
+
+  
+  @Field(() => String, {nullable: true,description:"Si true y no false"})
+  @IsOptional()
+  @IsString()
+  activo: string;
+
+
 }

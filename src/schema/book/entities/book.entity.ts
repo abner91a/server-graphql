@@ -66,7 +66,7 @@ export class Book extends Document {
 
   @Prop({
     type: Boolean,
-    default: false,
+    default: true,
   })
   @Field(() => Boolean)
   isActive: boolean;
