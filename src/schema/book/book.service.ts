@@ -72,6 +72,7 @@ export class BookService {
 
     const book = await this.findByIdBook(updateBookInput.id);
 
+    //Revisar
     if (book.authorId.toString() !== user._id.toString())
       BookFilterException.prototype.handlerDBError(null, 3);
 
@@ -208,6 +209,17 @@ export class BookService {
   // remove(id: number) {
   //   return `This action removes a #${id} book`;
   // }
+
+
+  async findByIdUpdateBookPortada(id: string, file): Promise<Book> {
+    // console.log(file)
+    return await this.bookModel.findByIdAndUpdate(id, {
+      image: `book/${file.filename}`,
+      // imageCDN: `book/${file.filename}`,
+      updatedAt: new Date(),
+    });
+  }
+
 
   private aggregateProject() {
     return {

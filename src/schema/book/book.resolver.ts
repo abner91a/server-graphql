@@ -44,23 +44,31 @@ export class BookResolver {
     return this.bookService.update(updateBookInput, user);
   }
 
+    //TODO: revisar que se pueda hacer query sin categoria ID
   @Query(() => BookListResponse, {
     name: 'getAllBook',
     description: 'Obtiene la lista de libros con query solo para usuarios',
   })
-  findAll(@Args('query') query: QueryArgs) {
+  findAll(
+    @Args('query') query: QueryArgs, 
+    @CurrentUser(ValidUser_type.user) user: User,
+  
+  ) {
     return this.bookService.findAllQuery(query);
   }
 
-
+  //TODO: revisar que se pueda hacer query sin categoria ID
   @Query(() => [Book], { name: 'getBookId',description: 'Trae un libro por id' })
  async getBookId(@Args('query') query: QueryArgsBook  ) {
     return this.bookService.getBookDetail(query)
   }
 
 
+
+
   //TODO
   //Crear la opcion de subir imagen por la api crearla
+  //TODO CREAR RUTA PARA QUE EL USUARIO VEA SU LIBRO
 
 
   //TODO FUERTES

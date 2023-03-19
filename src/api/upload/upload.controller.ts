@@ -24,6 +24,7 @@ import { fileFilter } from './helpers/file-filter.helpers';
 import { diskStorage } from 'multer';
 import { fileNamer } from './helpers/fileNamer.helpers';
 import { CategoryidGuard } from 'src/schema/category/guards/catergory-id.guard';
+import { BookidGuard } from 'src/schema/book/guards/book-id.book';
 
 @Controller('v1/upload/files')
 export class UploadController {
@@ -47,6 +48,27 @@ export class UploadController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     return await this.uploadService.uploadFileCategory(id, file);
+  }
+
+
+  @Post('book/:id')
+  @UseGuards(JwtAuthGuard, BookidGuard)
+  @UseInterceptors(
+    FileInterceptor('file', {
+      fileFilter: fileFilter,
+       limits: { fileSize: 2097152 }, //En bytes https://convertlive.com/es/u/convertir/megabytes/a/bytes#2
+      storage: diskStorage({
+        destination: './public/images/book',
+        filename: fileNamer,
+      }),
+    }),
+  )
+  async uploadFile(
+    @Param('id', ParseMongoIdPipe) id: string,
+    @CurrentUser(ValidUser_type.user) user: User,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return await this.uploadService.uploadFileBook(id, file);
   }
 
   // @Get()

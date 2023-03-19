@@ -15,5 +15,6 @@ import { Book, BookSchema } from './entities/book.entity';
       }
     ]),
     CategoryModule],
+    exports: [BookService]
 })
 export class BookModule {}
