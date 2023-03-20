@@ -30,5 +30,15 @@ export class UpdateBookInput extends PartialType(CreateBookInput) {
   @IsString()
   activo: string;
 
+  @Field(() => String, {nullable: true,description:"Si true y no false"})
+  @IsOptional()
+  @IsString()
+  isApprovedBook: string;
+
+  
+  @Field(() => String, {nullable: true,description:"Pon e rol del admin"})
+  @IsOptional()
+  @IsString()
+  rol: string;
 
 }

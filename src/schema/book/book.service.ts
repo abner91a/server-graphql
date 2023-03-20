@@ -76,7 +76,7 @@ export class BookService {
     if (book.authorId.toString() !== user._id.toString())
       BookFilterException.prototype.handlerDBError(null, 3);
 
-    if (updateBookInput.bloquearLibro) {
+    if (updateBookInput.rol) {
       if (user.user_type === 2) {
         this.actualizarAdm(book, updateBookInput);
         // console.log(book)
@@ -84,6 +84,8 @@ export class BookService {
         BookFilterException.prototype.handlerDBError(null, 3);
       }
     }
+
+
 
     if (updateBookInput.description)
       book.description = updateBookInput.description;
@@ -121,7 +123,7 @@ export class BookService {
     return book;
   }
 
-  async findAllQuery(query: QueryArgs): Promise<BookListResponse> {
+  async findAllBookQuery(query: QueryArgs): Promise<BookListResponse> {
     const { page, perPage, categoryId, sort } = query;
 
     let queryBook = {
@@ -179,7 +181,7 @@ export class BookService {
       { $project: this.aggregateProject() },
     ]);
 
-    console.log(book)
+    // console.log(book)
 
     if (!book.length) BookFilterException.prototype.handlerDBError(null, 1);
     // console.log(book);
@@ -195,6 +197,8 @@ export class BookService {
   private actualizarAdm(book: Book, updateBookInput: UpdateBookInput): Book {
     if (updateBookInput.bloquearLibro === 'si') book.isBlocked = true;
     if (updateBookInput.bloquearLibro === 'no') book.isBlocked = false;
+    if (updateBookInput.isApprovedBook === 'si') book.isApproved = true;
+    if (updateBookInput.isApprovedBook === 'no') book.isApproved = false;
     if (updateBookInput.activo === 'si') {
       book.isActive = true;
     }

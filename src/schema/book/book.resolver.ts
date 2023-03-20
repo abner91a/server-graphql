@@ -54,7 +54,7 @@ export class BookResolver {
     @CurrentUser(ValidUser_type.user) user: User,
   
   ) {
-    return this.bookService.findAllQuery(query);
+    return this.bookService.findAllBookQuery(query);
   }
 
   //TODO: revisar que se pueda hacer query sin categoria ID

@@ -186,4 +186,10 @@ input UpdateBookInput {
 
   """Si true y no false"""
   activo: String
+
+  """Si true y no false"""
+  isApprovedBook: String
+
+  """Pon e rol del admin"""
+  rol: String
 }

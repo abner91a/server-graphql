@@ -49,13 +49,13 @@ export class UploadService {
 
     book.image = `book/${file.filename}`;
 
-    // const bunny = new BunnyCDNStorage(
-    //   process.env.IMAGEN_KEY,
-    //   'api-gatito',
-    //   'category',
-    // );
+    const bunny = new BunnyCDNStorage(
+      process.env.IMAGEN_KEY,
+      'api-gatito',
+      'book',
+    );
  
-    // const img = await bunny.upload(file.path);
+    const img = await bunny.upload(file.path);
 
     
     return book;
