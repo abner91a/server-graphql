@@ -65,12 +65,6 @@ export class BookResolver {
 
 
 
-
-  //TODO
-  //Crear la opcion de subir imagen por la api crearla
-  //TODO CREAR RUTA PARA QUE EL USUARIO VEA SU LIBRO
-
-
   //TODO FUERTES
   //Guardar libro en la biblioteca
   //Perm,itir reportar libro

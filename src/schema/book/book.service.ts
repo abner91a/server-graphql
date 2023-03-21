@@ -57,6 +57,8 @@ export class BookService {
       },
     );
 
+    // console.log(user)
+
     for (let i = 0; i < updateBookInput.categories.length; i++) {
       const hola = await this.categoryService.categoryMultipleId(
         updateBookInput.categories[i],
@@ -71,6 +73,8 @@ export class BookService {
     }
 
     const book = await this.findByIdBook(updateBookInput.id);
+
+    // console.log(book)
 
     //Revisar
     if (book.authorId.toString() !== user._id.toString())

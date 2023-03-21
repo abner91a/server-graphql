@@ -11,5 +11,5 @@ export class BookListResponse{
     book: Book[] ;
 
     @Field(()=> Number)
-    totalPagina: Number ;
+    totalPagina: number ;
 }

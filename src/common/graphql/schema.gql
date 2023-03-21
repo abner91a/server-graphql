@@ -72,6 +72,25 @@ type BookListResponse {
   totalPagina: Float!
 }
 
+type ReportBook {
+  _id: ID!
+  bookId: ID!
+  authorId: ID!
+  userIdReport: ID!
+  userEmail: String!
+  booktitle: String!
+  reason: String!
+  reasonDetails: String!
+  status: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ReportListResponse {
+  reportBook: [ReportBook!]!
+  totalPagina: Float!
+}
+
 type Query {
   borra1(createUserInput: CreateUserInput!): User!
   borra2(createUserInput: CreateUserInput!): User!
@@ -93,6 +112,9 @@ type Query {
 
   """Trae un libro por id"""
   getBookId(query: QueryArgsBook!): [Book!]!
+
+  """Lista de Todo los reporte por query"""
+  reportBookAll(query: QueryReportArgs!): ReportListResponse!
 }
 
 input CreateUserInput {
@@ -119,6 +141,12 @@ input QueryArgsBook {
   idNovel: String!
 }
 
+input QueryReportArgs {
+  page: Int!
+  perPage: Int!
+  reportId: String
+}
+
 type Mutation {
   """Crea un usuario"""
   createUsers(addUser: SignupInput!): AuthResponse!
@@ -136,6 +164,12 @@ type Mutation {
   Permite al usuario actualizar su libro, esta validado que solo el autor quien creo el libro pueda actualizarlo
   """
   updateBookUser(updateBookInput: UpdateBookInput!): Book!
+
+  """Crear reporte de algun libro rol: Usuario y admin"""
+  updateReportBook(addReportBook: UpdateReportBookInput!): [ReportBook!]!
+
+  """Crear reporte de algun libro rol: Usuario y admin"""
+  addReportBook(addReportBook: ReportBookInput!): ReportBook!
 }
 
 input SignupInput {
@@ -192,4 +226,16 @@ input UpdateBookInput {
 
   """Pon e rol del admin"""
   rol: String
+}
+
+input UpdateReportBookInput {
+  id: String!
+  borrarReporteBD: Float
+  desactivarReporte: Float
+}
+
+input ReportBookInput {
+  bookId: String!
+  reason: String!
+  reasonDetails: String!
 }

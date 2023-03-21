@@ -12,7 +12,8 @@ import { Book, BookSchema } from './entities/book.entity';
       {
         name: Book.name,
         schema: BookSchema 
-      }
+      },
+      
     ]),
     CategoryModule],
     exports: [BookService]

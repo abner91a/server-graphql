@@ -14,6 +14,7 @@ import { CategoryModule } from './schema/category/category.module';
 import { UploadModule } from './api/upload/upload.module';
 import { BookModule } from './schema/book/book.module';
 import GraphQLJSON, { GraphQLJSONObject  } from 'graphql-type-json';
+import { BookfeaturesModule } from './schema/bookfeatures/bookfeatures.module';
 @Module({
   imports: [
     ConfigModule.forRoot({  isGlobal: true }),
@@ -34,6 +35,7 @@ import GraphQLJSON, { GraphQLJSONObject  } from 'graphql-type-json';
     CategoryModule,
     UploadModule,
     BookModule,
+    BookfeaturesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
