@@ -91,6 +91,27 @@ type ReportListResponse {
   totalPagina: Float!
 }
 
+type Bookpart {
+  _id: ID!
+  bookId: ID!
+  authorId: ID!
+  title: String!
+  content: String
+  isActive: Boolean!
+  isApproved: Boolean!
+  isPublished: Boolean!
+  isBlocked: Boolean!
+  chapter: Float!
+  avgRating: Float!
+  ratingCounts: Float!
+  reviewCounts: Float!
+  totalComments: Float!
+  views: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  publishedOn: DateTime!
+}
+
 type Query {
   borra1(createUserInput: CreateUserInput!): User!
   borra2(createUserInput: CreateUserInput!): User!
@@ -170,6 +191,12 @@ type Mutation {
 
   """Crear reporte de algun libro rol: Usuario y admin"""
   addReportBook(addReportBook: ReportBookInput!): ReportBook!
+
+  """Agrega un capitulo al libro"""
+  addBookPart(addBookPart: AddBookPart!): Bookpart!
+
+  """edita un capitulo de algun libro"""
+  editBookPart(editBookPart: EditBookPart!): Bookpart!
 }
 
 input SignupInput {
@@ -238,4 +265,16 @@ input ReportBookInput {
   bookId: String!
   reason: String!
   reasonDetails: String!
+}
+
+input AddBookPart {
+  idBook: String!
+  title: String!
+  content: String!
+}
+
+input EditBookPart {
+  idpartBook: String!
+  title: String
+  content: String
 }

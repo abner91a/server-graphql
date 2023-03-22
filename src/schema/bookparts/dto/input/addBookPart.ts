@@ -10,6 +10,7 @@ export class AddBookPart {
     // @Transform(toMongoObjectId)
     idBook: string;
 
+
     @Field(() => String )
     @IsString()
     @MinLength(5)
