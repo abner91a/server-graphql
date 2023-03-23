@@ -5,9 +5,10 @@ import { BookpartsService } from './bookparts.service';
 import { BookModule } from '../book/book.module';
 import { Bookpart, Bookpartchema } from './entities/bookpart.entity';
 import { BookpartsMutationResolver } from './resolvers/mutation';
+import { BookpartsQueryResolver } from './resolvers/query/bookPart.resolver.query';
 
 @Module({
-  providers: [BookpartsMutationResolver, BookpartsService],
+  providers: [BookpartsMutationResolver,BookpartsQueryResolver, BookpartsService],
   imports: [
     MongooseModule.forFeature([{ name: Bookpart.name, schema: Bookpartchema }]),
 

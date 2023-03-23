@@ -136,6 +136,8 @@ type Query {
 
   """Lista de Todo los reporte por query"""
   reportBookAll(query: QueryReportArgs!): ReportListResponse!
+  getOneBookpart(id: String!): Bookpart!
+  readBook(read: QueryBookPartArgs!): Bookpart!
 }
 
 input CreateUserInput {
@@ -166,6 +168,10 @@ input QueryReportArgs {
   page: Int!
   perPage: Int!
   reportId: String
+}
+
+input QueryBookPartArgs {
+  idpartBook: String!
 }
 
 type Mutation {

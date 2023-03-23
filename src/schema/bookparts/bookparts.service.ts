@@ -7,6 +7,7 @@ import mongoose, { Model } from 'mongoose';
 import { User } from '../users/entities/user.entity';
 import { BookPartFilterException } from 'src/common/filters/bookPart.filter';
 import { EditBookPart } from './dto/input/editBookPart';
+import { QueryBookPartArgs } from './dto/args/query.bookparts.args';
 
 @Injectable()
 export class BookpartsService {
@@ -21,7 +22,8 @@ export class BookpartsService {
 
     const existBook = await this.bookService.findByIdBook(idBook);
 
-    if (user._id.toString() !== existBook.authorId.toString()) BookPartFilterException.prototype.handlerDBError(null,1)
+    if (user._id.toString() !== existBook.authorId.toString())
+      BookPartFilterException.prototype.handlerDBError(null, 1);
 
     let queryBook = {
       bookId: new mongoose.Types.ObjectId(idBook),
@@ -67,40 +69,53 @@ export class BookpartsService {
     return addchapter;
   }
 
-
-
-  async updateChapter(editBookPart:EditBookPart,user:User){
-
+  async updateChapter(editBookPart: EditBookPart, user: User) {
     const existChapter = await this.findByChapterBook(editBookPart.idpartBook);
 
-
-
     //Validamos si el autor es el original
-    if (user._id.toString() !== existChapter.authorId.toString()) BookPartFilterException.prototype.handlerDBError(null,1)
-  
+    if (user._id.toString() !== existChapter.authorId.toString())
+      BookPartFilterException.prototype.handlerDBError(null, 1);
 
-    if(editBookPart.title){
+    if (editBookPart.title) {
       // console.log(editBookPart.title.trim())
       existChapter.title = editBookPart.title.trim();
     }
-    
-    if(editBookPart.content){
+
+    if (editBookPart.content) {
       existChapter.content = editBookPart.content;
     }
 
     existChapter.updatedAt = new Date();
     existChapter.save();
     return existChapter;
-
   }
 
-
-  async findByChapterBook(id:string){
+  async findByChapterBook(id: string) {
     const existChapter = await this.bookPartModel.findById(id);
 
-    if(!existChapter)  BookPartFilterException.prototype.handlerDBError(null,2)
+    if (!existChapter)
+      BookPartFilterException.prototype.handlerDBError(null, 2);
 
     return existChapter;
+  }
+
+  async findOneBookPartOne(id: string) {
+    const existBook = await this.bookPartModel.findById(id);
+
+    if (!existBook) BookPartFilterException.prototype.handlerDBError(null, 2);
+
+    return existBook;
+  }
+
+  async readNovel(query: QueryBookPartArgs){
+   const { idpartBook } = query;
+
+   const existBook = await this.findByChapterBook(idpartBook);
+
+   console.log(existBook)
+   
+   return existBook;
+
   }
 
 
@@ -120,7 +135,7 @@ export class BookpartsService {
   //   return `This action removes a #${id} bookpart`;
   // }
 
-    // async findByChapterExist(idbook: string) {
+  // async findByChapterExist(idbook: string) {
   //   const lastChapter = await this.bookModel
   //     .find({ bookId: new mongoose.Types.ObjectId(idbook) })
   //     .limit(1)
@@ -128,8 +143,6 @@ export class BookpartsService {
 
   //   return lastChapter;
   // }
-
-
 
   private aggregateProject() {
     return {
