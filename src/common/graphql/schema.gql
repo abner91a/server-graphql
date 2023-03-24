@@ -190,6 +190,7 @@ input QueryBookAllPartArgs {
 
 input QueryBookPartArgs {
   bookId: String!
+  bookChapterId: String
   page: Int! = 1
   perPage: Int! = 1
 }

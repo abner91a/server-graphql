@@ -10,9 +10,10 @@ export class QueryBookPartArgs {
     @IsMongoId()
     bookId:string
 
-    // @Field( ()=> String  )
-    // @IsMongoId()
-    // bookChapterId:string
+    @Field( ()=> String, { nullable: true}  )
+    @IsOptional()
+    @IsMongoId()
+    bookChapterId:string
 
     @Field( ()=> Int, {defaultValue: 1}  )
     @IsInt()

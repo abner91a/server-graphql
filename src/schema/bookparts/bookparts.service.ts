@@ -120,44 +120,38 @@ export class BookpartsService {
       bookId,
       //  bookChapterId
       page,
-      perPage = 1
+      perPage = 1,
     } = query;
 
     const book = await this.bookService.findByIdBook(bookId);
+    let bookPart;
+    let sigPage;
+    let anteriorPage;
 
-  
+    // console.log('hola')
 
+    if (query.bookChapterId) {
+      bookPart = await this.getChapterReadId(query);
+      // console.log(bookPart);
 
+      sigPage = bookPart[0].chapter + 1;
 
-    let queryBook = {
-      // _id: new mongoose.Types.ObjectId("641d49e1537972691bb634a5"),
-      bookId: new mongoose.Types.ObjectId(bookId),
-      // isPublished: false,
-    };
+      if (sigPage === book.total_chapters + 1) sigPage = null;
 
-    const bookPart = await this.bookPartModel.aggregate([
-      { $match: queryBook },
-      // { $sort: { chapter: 1 } },
-      { $skip: (page - 1) * perPage },
-      { $limit: perPage },
-    ]);
+      anteriorPage = bookPart[0].chapter - 1;
+    } else {
+      bookPart = await this.getChapterNoId(query);
+      sigPage = page + 1;
 
-    if(!bookPart.length)      BookPartFilterException.prototype.handlerDBError(null, 4);
-  
-    let sigPage  = page + 1;
+      if (sigPage === book.total_chapters + 1) sigPage = null;
 
-
-    if(sigPage === book.total_chapters+1 ){
-      sigPage = null;
+      anteriorPage = page - 1;
     }
-
-    const anteriorPage = (page - 1) ;
-
     return {
       bookPart,
       book,
-       sigPage,
-       anteriorPage
+      sigPage,
+      anteriorPage,
       // totalChapter,
     };
   }
@@ -188,6 +182,48 @@ export class BookpartsService {
     return {
       bookPart,
     };
+  }
+
+  private async getChapterNoId(query: QueryBookPartArgs) {
+    let queryBook = {
+      // _id: new mongoose.Types.ObjectId('641d49e1537972691bb634a5'),
+      bookId: new mongoose.Types.ObjectId(query.bookId),
+      // isPublished: false,
+    };
+
+    const bookPart = await this.bookPartModel.aggregate([
+      { $match: queryBook },
+      // { $sort: { chapter: 1 } },
+      { $skip: (query.page - 1) * query.perPage },
+      { $limit: query.perPage },
+    ]);
+
+    if (!bookPart.length)
+      BookPartFilterException.prototype.handlerDBError(null, 4);
+
+    return bookPart;
+  }
+
+  private async getChapterReadId(query: QueryBookPartArgs) {
+    let queryBook = {
+      _id: new mongoose.Types.ObjectId(query.bookChapterId),
+      bookId: new mongoose.Types.ObjectId(query.bookId),
+      // isPublished: false,
+    };
+
+    const bookPart = await this.bookPartModel.aggregate([
+      { $match: queryBook },
+      // { $sort: { chapter: 1 } },
+      // { $skip: (query.page - 1) * query.perPage },
+      { $limit: 1 },
+    ]);
+
+    // console.log(bookPart)
+
+    if (!bookPart.length)
+      BookPartFilterException.prototype.handlerDBError(null, 4);
+
+    return bookPart;
   }
 
   //Todo HACER UNA LISTA DE CAPITULOS
