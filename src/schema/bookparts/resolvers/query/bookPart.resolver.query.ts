@@ -10,7 +10,7 @@ import { BookpartsService } from '../../bookparts.service';
 import { Bookpart } from '../../entities/bookpart.entity';
 import { QueryBookPartArgs } from '../../dto/args/query.bookparts.args';
 import { QueryBookAllPartArgs } from '../../dto/args/query.bookAllpart.args';
-import { getAllBookListReadResponse } from '../../types/bookPart.types';
+import { getAllBookListReadResponse, readBookListReadResponse } from '../../types/bookPart.types';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Bookpart)
@@ -30,11 +30,11 @@ export class BookpartsQueryResolver {
   }
 
 
-  // @Query(() => BookListReadResponse, { name: 'readBook' })
-  // read_book(
-  //   @Args('read') read: QueryBookPartArgs ):Promise<BookListReadResponse>{
-  //   return this.bookpartsService.readNovel(read);
-  // }
+  @Query(() => readBookListReadResponse, { name: 'readBook' })
+  read_book(
+    @Args('read') read: QueryBookPartArgs ):Promise<readBookListReadResponse>{
+    return this.bookpartsService.readNovel(read);
+  }
 
   //Todo Borrar capitulo o desactivarlo
 

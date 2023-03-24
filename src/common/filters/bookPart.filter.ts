@@ -29,6 +29,15 @@ import {
         });
       }
   
+
+      if (code === 4) {
+        throw new BadRequestException('Error: No hay capitulos', {
+          cause: new Error(),
+          description: 'No hay capitulos',
+        });
+      }
+  
+
       console.log(error);
   
       throw new InternalServerErrorException(

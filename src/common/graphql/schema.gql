@@ -116,6 +116,13 @@ type getAllBookListReadResponse {
   bookPart: [Bookpart!]!
 }
 
+type readBookListReadResponse {
+  book: Book
+  bookPart: [Bookpart!]
+  sigPage: Float
+  anteriorPage: Float
+}
+
 type Query {
   borra1(createUserInput: CreateUserInput!): User!
   borra2(createUserInput: CreateUserInput!): User!
@@ -142,6 +149,7 @@ type Query {
   reportBookAll(query: QueryReportArgs!): ReportListResponse!
   getOneBookpart(id: String!): Bookpart!
   getAllChapter(query: QueryBookAllPartArgs!): getAllBookListReadResponse!
+  readBook(read: QueryBookPartArgs!): readBookListReadResponse!
 }
 
 input CreateUserInput {
@@ -175,6 +183,12 @@ input QueryReportArgs {
 }
 
 input QueryBookAllPartArgs {
+  bookId: String!
+  page: Int! = 1
+  perPage: Int! = 1
+}
+
+input QueryBookPartArgs {
   bookId: String!
   page: Int! = 1
   perPage: Int! = 1

@@ -8,22 +8,24 @@ export class QueryBookPartArgs {
 
     @Field( ()=> String  )
     @IsMongoId()
-    idpartBook:string
+    bookId:string
+
+    // @Field( ()=> String  )
+    // @IsMongoId()
+    // bookChapterId:string
+
+    @Field( ()=> Int, {defaultValue: 1}  )
+    @IsInt()
+    @IsPositive()
+    @IsNotEmpty()
+    page:number
 
 
-
-    // @Field( ()=> Int  )
-    // @IsInt()
-    // @IsPositive()
-    // @IsNotEmpty()
-    // page:number
-
-
-    // @Field( ()=> Int  )
-    // @IsInt()
-    // @IsPositive()
-    // @IsNotEmpty()
-    // perPage:number
+    @Field( ()=> Int , {defaultValue: 1} )
+    @IsInt()
+    @IsPositive()
+    @IsNotEmpty()
+    perPage:number
 
     // @Field( ()=> String  )
     // @IsMongoId()

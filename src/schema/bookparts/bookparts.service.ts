@@ -11,8 +11,10 @@ import { QueryBookPartArgs } from './dto/args/query.bookparts.args';
 import {
   BookListReadResponse,
   getAllBookListReadResponse,
+  readBookListReadResponse,
 } from './types/bookPart.types';
 import { QueryBookAllPartArgs } from './dto/args';
+import axios from 'axios';
 
 @Injectable()
 export class BookpartsService {
@@ -58,6 +60,7 @@ export class BookpartsService {
       return firstChapter;
     }
 
+    //funcional
     const addchapter = await this.bookPartModel.create({
       _id: new mongoose.Types.ObjectId(),
       title,
@@ -112,52 +115,71 @@ export class BookpartsService {
     return existBook;
   }
 
-  async readNovel(query: QueryBookPartArgs): Promise<BookListReadResponse> {
-    const { idpartBook } = query;
+  async readNovel(query: QueryBookPartArgs): Promise<readBookListReadResponse> {
+    const {
+      bookId,
+      //  bookChapterId
+      page,
+      perPage = 1
+    } = query;
 
-    //  const bookPart = await this.findByChapterBook(idpartBook);
+    const book = await this.bookService.findByIdBook(bookId);
 
-    let queryBook = {
-      _id: new mongoose.Types.ObjectId(idpartBook),
-      // isPublished: false,
-    };
+  
 
-    const bookPart = await this.bookPartModel.aggregate([
-      { $match: queryBook },
-      // { $sort: { chapter: -1 } },
-      // { $limit: 1 },
-      // { $project: this.aggregateProject() },
-    ]);
 
-    console.log(bookPart);
-
-    // console.log(bookPart)
-
-    // const revisarIdBook = await this.bookService.findByIdBookWithProyection(bookPart.bookId);
-
-    // console.log(revisarIdBook)
-
-    return {
-      bookPart,
-      totalPagina: 1,
-    };
-  }
-
-  async getAllChapter(
-    query: QueryBookAllPartArgs,
-  ): Promise<getAllBookListReadResponse> {
-    const { bookId } = query;
 
     let queryBook = {
+      // _id: new mongoose.Types.ObjectId("641d49e1537972691bb634a5"),
       bookId: new mongoose.Types.ObjectId(bookId),
       // isPublished: false,
     };
 
     const bookPart = await this.bookPartModel.aggregate([
       { $match: queryBook },
-      // { $sort: { chapter: -1 } },
-      // { $limit: 1 },
-      // { $project: this.aggregateProject() },
+      // { $sort: { chapter: 1 } },
+      { $skip: (page - 1) * perPage },
+      { $limit: perPage },
+    ]);
+
+    if(!bookPart.length)      BookPartFilterException.prototype.handlerDBError(null, 4);
+  
+    let sigPage  = page + 1;
+
+
+    if(sigPage === book.total_chapters+1 ){
+      sigPage = null;
+    }
+
+    const anteriorPage = (page - 1) ;
+
+    return {
+      bookPart,
+      book,
+       sigPage,
+       anteriorPage
+      // totalChapter,
+    };
+  }
+
+  async getAllChapter(
+    query: QueryBookAllPartArgs,
+  ): Promise<getAllBookListReadResponse> {
+    let { bookId, page, perPage } = query;
+
+    let queryBook = {
+      bookId: new mongoose.Types.ObjectId(bookId),
+      // isPublished: false,
+    };
+
+    // perPage = 1;
+
+    const bookPart = await this.bookPartModel.aggregate([
+      { $match: queryBook },
+      { $sort: { chapter: 1 } },
+      { $skip: (page - 1) * perPage },
+      { $limit: perPage },
+      // { $project: this.chapterProject() },
     ]);
 
     if (!bookPart.length)
@@ -205,6 +227,29 @@ export class BookpartsService {
       // isApproved: 1,
       // isBlocked: 1,
       chapter: 1,
+      // avgRating: 1,
+      // ratingCounts: 1,
+      // reviewCounts: 1,
+      // totalComments: 1,
+      // views: 1,
+      // createdAt: 1,
+      // updatedAt: 1,
+      // isPublished: 1,
+      // publishedOn: 1,
+    };
+  }
+
+  private chapterProject() {
+    return {
+      _id: 1,
+      // bookId: 1,
+      title: 1,
+      // content: 1,
+      // isActive: 1,
+      // isApproved: 1,
+      // isBlocked: 1,
+      chapter: 1,
+      content: 1,
       // avgRating: 1,
       // ratingCounts: 1,
       // reviewCounts: 1,
