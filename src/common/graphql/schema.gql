@@ -112,6 +112,10 @@ type Bookpart {
   publishedOn: DateTime!
 }
 
+type getAllBookListReadResponse {
+  bookPart: [Bookpart!]!
+}
+
 type Query {
   borra1(createUserInput: CreateUserInput!): User!
   borra2(createUserInput: CreateUserInput!): User!
@@ -132,12 +136,12 @@ type Query {
   getAllBook(query: QueryArgs!): BookListResponse!
 
   """Trae un libro por id"""
-  getBookId(query: QueryArgsBook!): [Book!]!
+  getBookInfo(query: QueryArgsBook!): [Book!]!
 
   """Lista de Todo los reporte por query"""
   reportBookAll(query: QueryReportArgs!): ReportListResponse!
   getOneBookpart(id: String!): Bookpart!
-  readBook(read: QueryBookPartArgs!): Bookpart!
+  getAllChapter(query: QueryBookAllPartArgs!): getAllBookListReadResponse!
 }
 
 input CreateUserInput {
@@ -161,7 +165,7 @@ input QueryArgs {
 }
 
 input QueryArgsBook {
-  idNovel: String!
+  bookId: String!
 }
 
 input QueryReportArgs {
@@ -170,8 +174,10 @@ input QueryReportArgs {
   reportId: String
 }
 
-input QueryBookPartArgs {
-  idpartBook: String!
+input QueryBookAllPartArgs {
+  bookId: String!
+  page: Int! = 1
+  perPage: Int! = 1
 }
 
 type Mutation {

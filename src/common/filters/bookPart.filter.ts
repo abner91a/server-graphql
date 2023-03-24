@@ -21,6 +21,13 @@ import {
           description: 'No existe el capitulo',
         });
       }
+
+      if (code === 3) {
+        throw new BadRequestException('Error: No existe el libro', {
+          cause: new Error(),
+          description: 'No existe el libro',
+        });
+      }
   
       console.log(error);
   

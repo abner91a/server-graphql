@@ -8,7 +8,7 @@ export class QueryArgsBook {
 
     @Field( ()=> String  )
     @IsMongoId()
-    idNovel:string
+    bookId:string
 
  
     

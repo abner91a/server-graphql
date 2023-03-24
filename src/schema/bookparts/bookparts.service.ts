@@ -8,6 +8,11 @@ import { User } from '../users/entities/user.entity';
 import { BookPartFilterException } from 'src/common/filters/bookPart.filter';
 import { EditBookPart } from './dto/input/editBookPart';
 import { QueryBookPartArgs } from './dto/args/query.bookparts.args';
+import {
+  BookListReadResponse,
+  getAllBookListReadResponse,
+} from './types/bookPart.types';
+import { QueryBookAllPartArgs } from './dto/args';
 
 @Injectable()
 export class BookpartsService {
@@ -107,17 +112,63 @@ export class BookpartsService {
     return existBook;
   }
 
-  async readNovel(query: QueryBookPartArgs){
-   const { idpartBook } = query;
+  async readNovel(query: QueryBookPartArgs): Promise<BookListReadResponse> {
+    const { idpartBook } = query;
 
-   const existBook = await this.findByChapterBook(idpartBook);
+    //  const bookPart = await this.findByChapterBook(idpartBook);
 
-   console.log(existBook)
-   
-   return existBook;
+    let queryBook = {
+      _id: new mongoose.Types.ObjectId(idpartBook),
+      // isPublished: false,
+    };
 
+    const bookPart = await this.bookPartModel.aggregate([
+      { $match: queryBook },
+      // { $sort: { chapter: -1 } },
+      // { $limit: 1 },
+      // { $project: this.aggregateProject() },
+    ]);
+
+    console.log(bookPart);
+
+    // console.log(bookPart)
+
+    // const revisarIdBook = await this.bookService.findByIdBookWithProyection(bookPart.bookId);
+
+    // console.log(revisarIdBook)
+
+    return {
+      bookPart,
+      totalPagina: 1,
+    };
   }
 
+  async getAllChapter(
+    query: QueryBookAllPartArgs,
+  ): Promise<getAllBookListReadResponse> {
+    const { bookId } = query;
+
+    let queryBook = {
+      bookId: new mongoose.Types.ObjectId(bookId),
+      // isPublished: false,
+    };
+
+    const bookPart = await this.bookPartModel.aggregate([
+      { $match: queryBook },
+      // { $sort: { chapter: -1 } },
+      // { $limit: 1 },
+      // { $project: this.aggregateProject() },
+    ]);
+
+    if (!bookPart.length)
+      BookPartFilterException.prototype.handlerDBError(null, 3);
+
+    return {
+      bookPart,
+    };
+  }
+
+  //Todo HACER UNA LISTA DE CAPITULOS
 
   // findAll() {
   //   return `This action returns all bookparts`;
