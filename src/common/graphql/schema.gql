@@ -91,6 +91,38 @@ type ReportListResponse {
   totalPagina: Float!
 }
 
+type Bookpart {
+  _id: ID!
+  bookId: ID!
+  authorId: ID!
+  title: String!
+  content: String
+  isActive: Boolean!
+  isApproved: Boolean!
+  isPublished: Boolean!
+  isBlocked: Boolean!
+  chapter: Float!
+  avgRating: Float!
+  ratingCounts: Float!
+  reviewCounts: Float!
+  totalComments: Float!
+  views: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  publishedOn: DateTime!
+}
+
+type getAllBookListReadResponse {
+  bookPart: [Bookpart!]!
+}
+
+type readBookListReadResponse {
+  book: Book
+  bookPart: [Bookpart!]
+  sigPage: Float
+  anteriorPage: Float
+}
+
 type Query {
   borra1(createUserInput: CreateUserInput!): User!
   borra2(createUserInput: CreateUserInput!): User!
@@ -111,10 +143,13 @@ type Query {
   getAllBook(query: QueryArgs!): BookListResponse!
 
   """Trae un libro por id"""
-  getBookId(query: QueryArgsBook!): [Book!]!
+  getBookInfo(query: QueryArgsBook!): [Book!]!
 
   """Lista de Todo los reporte por query"""
   reportBookAll(query: QueryReportArgs!): ReportListResponse!
+  getOneBookpart(id: String!): Bookpart!
+  getAllChapter(query: QueryBookAllPartArgs!): getAllBookListReadResponse!
+  readBook(read: QueryBookPartArgs!): readBookListReadResponse!
 }
 
 input CreateUserInput {
@@ -138,13 +173,26 @@ input QueryArgs {
 }
 
 input QueryArgsBook {
-  idNovel: String!
+  bookId: String!
 }
 
 input QueryReportArgs {
   page: Int!
   perPage: Int!
   reportId: String
+}
+
+input QueryBookAllPartArgs {
+  bookId: String!
+  page: Int! = 1
+  perPage: Int! = 1
+}
+
+input QueryBookPartArgs {
+  bookId: String!
+  bookChapterId: String
+  page: Int! = 1
+  perPage: Int! = 1
 }
 
 type Mutation {
@@ -170,6 +218,12 @@ type Mutation {
 
   """Crear reporte de algun libro rol: Usuario y admin"""
   addReportBook(addReportBook: ReportBookInput!): ReportBook!
+
+  """Agrega un capitulo al libro"""
+  addBookPart(addBookPart: AddBookPart!): Bookpart!
+
+  """edita un capitulo de algun libro"""
+  editBookPart(editBookPart: EditBookPart!): Bookpart!
 }
 
 input SignupInput {
@@ -238,4 +292,16 @@ input ReportBookInput {
   bookId: String!
   reason: String!
   reasonDetails: String!
+}
+
+input AddBookPart {
+  idBook: String!
+  title: String!
+  content: String!
+}
+
+input EditBookPart {
+  idpartBook: String!
+  title: String
+  content: String
 }

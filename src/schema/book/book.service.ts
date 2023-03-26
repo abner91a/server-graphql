@@ -127,6 +127,14 @@ export class BookService {
     return book;
   }
 
+  async findByIdBookWithProyection(id: string): Promise<Book> {
+    const book = await this.bookModel.findById(id, {_id: 1});
+
+    if (!book) BookFilterException.prototype.handlerDBError(null, 1);
+
+    return book;
+  }
+
   async findAllBookQuery(query: QueryArgs): Promise<BookListResponse> {
     const { page, perPage, categoryId, sort } = query;
 
@@ -172,7 +180,7 @@ export class BookService {
     // const book = await this.findByIdBook(query.idNovel);
     // console.log(book)
 
-    let queryBook = { '_id':new mongoose.Types.ObjectId(query.idNovel) };
+    let queryBook = { '_id':new mongoose.Types.ObjectId(query.bookId) };
 
 
     //Traer los capitulos de los libros

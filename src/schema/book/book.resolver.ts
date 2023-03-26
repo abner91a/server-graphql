@@ -58,7 +58,7 @@ export class BookResolver {
   }
 
   //TODO: revisar que se pueda hacer query sin categoria ID
-  @Query(() => [Book], { name: 'getBookId',description: 'Trae un libro por id' })
+  @Query(() => [Book], { name: 'getBookInfo',description: 'Trae un libro por id' })
  async getBookId(@Args('query') query: QueryArgsBook  ) {
     return this.bookService.getBookDetail(query)
   }
