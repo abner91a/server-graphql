@@ -2,7 +2,6 @@ import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipes';
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { CurrentUser } from 'src/auth/decorator/current-user.decorator';
-import { ValidUser_type } from 'src/auth/enum/rol.valido';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 import { User } from 'src/schema/users/entities/user.entity';
 import { BookpartsService } from '../../bookparts.service';

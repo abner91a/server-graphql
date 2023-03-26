@@ -64,8 +64,8 @@ export class BookfeaturesService {
     //console.log(user)
     //  console.log(updateReport)
 
-    if (user.user_type !== 2)
-      ReportFilterException.prototype.handlerDBError(null, 3);
+    // if (user.user_type !== 2) TODO ADMIN
+    //   ReportFilterException.prototype.handlerDBError(null, 3);
 
     // if(updateReport.borrarReporteBD >= 2 || updateReport.desactivarReporte >= 2 ) ReportFilterException.prototype.handlerDBError(null, 4);
 

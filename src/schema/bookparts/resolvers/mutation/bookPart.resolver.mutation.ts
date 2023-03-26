@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { CurrentUser } from 'src/auth/decorator/current-user.decorator';
-import { ValidUser_type } from 'src/auth/enum/rol.valido';
+import { ValidRoles } from 'src/auth/enum/rol.valido';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 import { User } from 'src/schema/users/entities/user.entity';
 import { BookpartsService } from '../../bookparts.service';
@@ -20,7 +20,7 @@ export class BookpartsMutationResolver {
   })
   createBookpart(
     @Args('addBookPart') addBookPart: AddBookPart,
-    @CurrentUser(ValidUser_type.user) user: User,) {
+    @CurrentUser([(ValidRoles.admin, ValidRoles.user, ValidRoles.editor)]) user: User,) {
     return this.bookpartsService.addPartBook(addBookPart,user);
   }
 
@@ -30,7 +30,7 @@ export class BookpartsMutationResolver {
   })
   editBookPart(
     @Args('editBookPart') editBookPart: EditBookPart,
-    @CurrentUser(ValidUser_type.user) user: User,
+    @CurrentUser([(ValidRoles.admin, ValidRoles.user, ValidRoles.editor)]) user: User,
   ) {
     return this.bookpartsService.updateChapter(editBookPart,user);
 

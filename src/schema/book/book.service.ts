@@ -80,14 +80,15 @@ export class BookService {
     if (book.authorId.toString() !== user._id.toString())
       BookFilterException.prototype.handlerDBError(null, 3);
 
-    if (updateBookInput.rol) {
-      if (user.user_type === 2) {
-        this.actualizarAdm(book, updateBookInput);
-        // console.log(book)
-      } else {
-        BookFilterException.prototype.handlerDBError(null, 3);
-      }
-    }
+      //TODO: REVISAR UPDATE LIBRO
+    // if (updateBookInput.rol) {
+    //   if (user.user_type === 2) {
+    //     this.actualizarAdm(book, updateBookInput);
+    //     // console.log(book)
+    //   } else {
+    //     BookFilterException.prototype.handlerDBError(null, 3);
+    //   }
+    // }
 
 
 

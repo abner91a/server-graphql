@@ -45,14 +45,24 @@ export class User extends Document {
   // @Field(() => String )
   password:string;
 
+
+  // //TODO: Eliminar de mongo en la siguiente actualizacion ala BD
+  // @Prop({
+  //   type: Number,
+  //   default: 1,
+  //   required: true,
+  // })
+  // @Field(() => Number )
+  // //Revisar usuario
+  // user_type:number;
+
   @Prop({
-    type: Number,
-    default: 1,
-    required: true,
+    type: [String],
+    default: ['user']
   })
-  @Field(() => Number )
-  //Revisar usuario
-  user_type:number;
+  @Field( () => [String] )
+  roles: string[]
+
 
 
   @Prop({
