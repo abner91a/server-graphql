@@ -13,12 +13,18 @@ export class CategoryService {
     private readonly categoryModel: Model<Category>,
   ) {}
 
-  async createCategory(
-    createCategoryInput: CreateCategoryInput,
-  ): Promise<Category> {
+  //Crea un nuevo registro de categoria
+  async createCategory(addCategory: CreateCategoryInput): Promise<Category> {
+    const existeCategory = await this.categoryModel.findOne({
+      name: addCategory.name,
+    });
+
+    if (existeCategory)
+      CategoryFilterException.prototype.handlerDBError(null, 2);
+
     const categoria = await this.categoryModel.create({
       _id: new mongoose.Types.ObjectId(),
-      ...createCategoryInput,
+      ...addCategory,
     });
     return categoria;
   }
@@ -59,9 +65,15 @@ export class CategoryService {
     return catergory;
   }
 
+  //Actualizar categoria
   async updateCategory(
     updateCategoryInput: UpdateCategoryInput,
   ): Promise<Category> {
+
+    const existeCategory = await this.categoryModel.findOne({name: updateCategoryInput.name});
+
+    if (existeCategory) CategoryFilterException.prototype.handlerDBError(null, 2);
+
     const category = await this.findCategoryById(updateCategoryInput.id);
 
     category.name = updateCategoryInput.name;

@@ -15,6 +15,14 @@ export class CategoryFilterException {
       });
     }
 
+    if (code === 2) {
+      throw new BadRequestException('Error: Nombre de la categoria  existe', {
+        cause: new Error(),
+        description: 'Categoria existe',
+      });
+    }
+
+
     console.log(error);
 
     throw new InternalServerErrorException(

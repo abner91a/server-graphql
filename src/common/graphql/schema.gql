@@ -200,10 +200,10 @@ type Mutation {
   createUsers(addUser: SignupInput!): AuthResponse!
 
   """Permite al adm agregar categoria"""
-  addCategory(createCategoryInput: CreateCategoryInput!): Category!
+  addCategoryAdmin(addCategory: CreateCategoryInput!): Category!
 
   """Permite al adm actualizar la categoria"""
-  updateCategory(createCategoryInput: UpdateCategoryInput!): Category!
+  updateCategoryAdmin(updateCategory: UpdateCategoryInput!): Category!
 
   """Permite al usuario agregar un libro"""
   addBook(addBookUser: CreateBookInput!): Book!
