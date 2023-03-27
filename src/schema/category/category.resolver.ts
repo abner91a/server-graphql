@@ -6,9 +6,9 @@ import { CreateCategoryInput } from './dto/create-category.input';
 import { UpdateCategoryInput } from './dto/update-category.input';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 import { User } from '../users/entities/user.entity';
-import { ValidUser_type } from 'src/auth/enum/rol.valido';
 import { CurrentUser } from 'src/auth/decorator/current-user.decorator';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipes';
+import { ValidRoles } from 'src/auth/enum/rol.valido';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Category)
@@ -22,7 +22,7 @@ export class CategoryResolver {
   })
   async addCategory(
     @Args('createCategoryInput') createCategoryInput: CreateCategoryInput,
-    @CurrentUser(ValidUser_type.admin) user: User,
+    @CurrentUser([(ValidRoles.admin)]) user: User,
   ): Promise<Category> {
     return await this.categoryService.createCategory(createCategoryInput);
   }
@@ -33,7 +33,7 @@ export class CategoryResolver {
   })
   async updateCategory(
     @Args('createCategoryInput') updateCategoryInput: UpdateCategoryInput,
-    @CurrentUser(ValidUser_type.admin) user: User,
+    @CurrentUser([(ValidRoles.admin)]) user: User,
   ): Promise<Category> {
     return await this.categoryService.updateCategory(updateCategoryInput);
   }
@@ -45,7 +45,7 @@ export class CategoryResolver {
     description: 'Trae todas las categorias',
   })
   async getAllCategory(
-    @CurrentUser(ValidUser_type.user) user: User,
+    @CurrentUser([(ValidRoles.admin, ValidRoles.user, ValidRoles.editor)]) user: User,
   ): Promise<Category[]> {
     return await this.categoryService.findAll();
   }
@@ -56,7 +56,7 @@ export class CategoryResolver {
   })
   async getIdcategory(
     @Args('id', { type: () => ID }, ParseMongoIdPipe) id: string,
-    @CurrentUser(ValidUser_type.user) user: User,
+    @CurrentUser([(ValidRoles.admin, ValidRoles.user, ValidRoles.editor)]) user: User,
   ): Promise<Category[]> {
     return await this.categoryService.findByCategoryId(id);
   }

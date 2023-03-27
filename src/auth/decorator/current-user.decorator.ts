@@ -7,11 +7,15 @@ import {
   import { GqlExecutionContext } from '@nestjs/graphql';
 import { UserFilterException } from 'src/common/filters/user.filter';
 import { User } from 'src/schema/users/entities/user.entity';
-import { ValidUser_type } from '../enum/rol.valido';
+import { ValidRoles } from '../enum/rol.valido';
+
 
   
   export const CurrentUser = createParamDecorator(
-    (user_type: ValidUser_type = 0, context: ExecutionContext) => {
+    // (user_type: ValidUser_type = 0, context: ExecutionContext) => {
+
+     (roles: ValidRoles[] = [] , context: ExecutionContext) => {
+
 
       //VALIDAMOS QUE VENGA DE HTTTP LOGEADO
       if (context.getType() === 'http') {
@@ -22,15 +26,24 @@ import { ValidUser_type } from '../enum/rol.valido';
             `No hay usuario dentro de request - debe haber un guard`,
           );
         }
+
+        if(roles.length === 0) return user;
+
+        for ( const role of user.roles ) {
+          // TODO: Eliminar Valid Roles
+          if ( roles.includes( role as ValidRoles ) ) {
+              return user;
+          }
+      }
   
-        if (user_type === user.user_type) {
-          return user;
-        } else if (user.user_type === 2) {
-          return user;
-        }
-        throw new ForbiddenException(
-          `Usuario: no tiene permiso para acceder a este recurso `,
-        );
+        // if (user_type === user.user_type) {
+        //   return user;
+        // } else if (user.user_type === 2) {
+        //   return user;
+        // }
+        // throw new ForbiddenException(
+        //   `Usuario: no tiene permiso para acceder a este recurso `,
+        // );
       }
   
       const ctx = GqlExecutionContext.create(context);
@@ -50,11 +63,20 @@ import { ValidUser_type } from '../enum/rol.valido';
   
       // console.log(user)
   
-      if (user_type === user.user_type) {
-        return user;
-      } else if (user.user_type === 2) {
-        return user;
-      }
+      // if (user_type === user.user_type) {
+      //   return user;
+      // } else if (user.user_type === 2) {
+      //   return user;
+      // }
+
+      if(roles.length === 0) return user;
+
+      for ( const role of user.roles ) {
+        // TODO: Eliminar Valid Roles
+        if ( roles.includes( role as ValidRoles ) ) {
+            return user;
+        }
+    }
   
       throw new ForbiddenException(`${user.fullname} no tienes permiso para esta pagina `);
     },

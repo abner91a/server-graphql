@@ -16,7 +16,6 @@ import { UpdateUploadDto } from './dto/update-upload.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 import { User } from 'src/schema/users/entities/user.entity';
 import { CurrentUser } from 'src/auth/decorator/current-user.decorator';
-import { ValidUser_type } from 'src/auth/enum/rol.valido';
 import { IsMongoId } from 'class-validator';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipes';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -25,6 +24,7 @@ import { diskStorage } from 'multer';
 import { fileNamer } from './helpers/fileNamer.helpers';
 import { CategoryidGuard } from 'src/schema/category/guards/catergory-id.guard';
 import { BookidGuard } from 'src/schema/book/guards/book-id.book';
+import { ValidRoles } from 'src/auth/enum/rol.valido';
 
 @Controller('v1/upload/files')
 export class UploadController {
@@ -44,7 +44,7 @@ export class UploadController {
   )
   async create(
     @Param('id', ParseMongoIdPipe) id: string,
-    @CurrentUser(ValidUser_type.user) user: User,
+    @CurrentUser([(ValidRoles.admin, ValidRoles.user, ValidRoles.editor)]) user: User,
     @UploadedFile() file: Express.Multer.File,
   ) {
     return await this.uploadService.uploadFileCategory(id, file);
@@ -65,7 +65,7 @@ export class UploadController {
   )
   async uploadFile(
     @Param('id', ParseMongoIdPipe) id: string,
-    @CurrentUser(ValidUser_type.user) user: User,
+    @CurrentUser([(ValidRoles.admin, ValidRoles.user, ValidRoles.editor)]) user: User,
     @UploadedFile() file: Express.Multer.File,
   ) {
     return await this.uploadService.uploadFileBook(id, file);

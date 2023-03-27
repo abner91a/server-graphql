@@ -6,7 +6,6 @@ import { AuthResponse } from './types/auth-response.types';
 import { LoginInput } from './dto/args/login.args';
 import { JwtAuthGuard } from './guards/jwt-auth.guards';
 import { UseGuards } from '@nestjs/common';
-import { ValidUser_type } from './enum/rol.valido';
 import { CurrentUser } from './decorator/current-user.decorator';
 
 @Resolver()
@@ -42,7 +41,7 @@ export class AuthResolver {
   })
   @UseGuards(JwtAuthGuard)
   async validandoToken(
-    @CurrentUser(ValidUser_type.admin) user: User,
+    @CurrentUser(/* [(ValidRoles.admin, ValidRoles.user, ValidRoles.editor)] */) user: User,
   ): Promise<AuthResponse> {
     // console.log(user)
 

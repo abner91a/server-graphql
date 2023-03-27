@@ -8,6 +8,7 @@ import { CreateUserInput } from './dto/input';
 import { User } from './entities/user.entity';
 import { UserFilterException } from 'src/common/filters/user.filter';
 import { GraphQLError } from 'graphql';
+import { UserAllQueryArgs } from './dto/args';
 
 export class LegallyUnavailableError extends Error {
   code = 451;
@@ -53,6 +54,39 @@ export class UsersService {
     const user = await this.userModel.findOne({ email: email.toLowerCase() });
 
     if (!user) UserFilterException.prototype.handlerDBError(null, 1);
+
+    return user;
+  }
+
+  async findAllUser(query: UserAllQueryArgs): Promise<User[]> {
+    const { search,page,perPage } = query;
+
+    let matchData = {}
+
+    if(search){
+
+     matchData = {
+      $or: [
+        { roles: { $regex: `^.*${search}.*`, $options: 'si' } },
+        { email: { $regex: `^.*${search}.*`, $options: 'si' } },
+      ],
+    };
+  }else {
+     matchData = {
+      $or: [
+        { roles: { $regex: `^.*${search}.*`, $options: 'si' } },
+        { email: { $regex: `^.*${search}.*`, $options: 'si' } },
+      ],
+    };
+  }
+
+    // const user = await this.userModel.find({});
+
+    const user = await this.userModel.aggregate([
+      { $match: matchData },
+      { $skip: (page - 1) * perPage },
+      { $limit: perPage },
+    ]);
 
     return user;
   }
