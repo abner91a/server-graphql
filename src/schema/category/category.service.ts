@@ -97,7 +97,7 @@ export class CategoryService {
       { $project: this.aggregateProject() },
     ]);
 
-    // console.log(categoria)
+    if(categoria.length === 0) CategoryFilterException.prototype.handlerDBError(null, 1)
 
     return categoria[0];
   }
