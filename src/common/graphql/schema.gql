@@ -35,6 +35,11 @@ type Category {
   imageCDN: String
 }
 
+type CategoryAdminResponse {
+  categoria: [Category!]
+  totalCategory: Float
+}
+
 type Catype {
   _id: ID!
   name: String!
@@ -138,6 +143,7 @@ type Query {
 
   """Trare una categoria"""
   getIdcategory(id: ID!): Category!
+  getAllCategoryAdmin(query: QueryCategoryAdminArgs!): CategoryAdminResponse!
 
   """Obtiene la lista de libros con query solo para usuarios"""
   getAllBook(query: QueryArgs!): BookListResponse!
@@ -161,6 +167,12 @@ input UserAllQueryArgs {
 input LoginInput {
   email: String!
   password: String!
+}
+
+input QueryCategoryAdminArgs {
+  page: Int! = 1
+  perPage: Int! = 1
+  isActive: Boolean
 }
 
 input QueryArgs {

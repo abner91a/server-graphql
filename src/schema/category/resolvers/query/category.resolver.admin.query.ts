@@ -9,6 +9,8 @@ import { ValidRoles } from 'src/auth/enum/rol.valido';
 import { Category } from '../../entities/category.entity';
 import { CategoryService } from '../../category.service';
 import { User } from 'src/schema/users/entities/user.entity';
+import { QueryCategoryAdminArgs } from '../../dto/args/query.category.admin.args';
+import { CategoryAdminResponse } from '../../type/categoryResponse';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Category)
@@ -16,9 +18,13 @@ export class CategoryResolverAdminQuery {
   constructor(private readonly categoryService: CategoryService) {}
 
   // Query Category
-  @Query(() => [Category], { name: 'getAllCategoryAdmin' })
-  async getAllCategoryAdmin(): Promise<Category[]> {
-    return await this.categoryService.findAll();
+  @Query(() => CategoryAdminResponse, { name: 'getAllCategoryAdmin' })
+  async getAllCategoryAdmin(
+    @Args('query') query: QueryCategoryAdminArgs,
+    @CurrentUser([(ValidRoles.admin)]) user: User,
+  ): Promise<CategoryAdminResponse> {
+    // console.log(query)
+    return await this.categoryService.findAllCategoryAdmin(query);
   }
 
   //   @Query(() => [Category], {

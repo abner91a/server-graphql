@@ -5,6 +5,8 @@ import mongoose, { Model } from 'mongoose';
 import { CreateCategoryInput } from './dto/create-category.input';
 import { UpdateCategoryInput } from './dto/update-category.input';
 import { Category } from './entities/category.entity';
+import { QueryCategoryAdminArgs } from './dto/args/query.category.admin.args';
+import { CategoryAdminResponse } from './type/categoryResponse';
 
 @Injectable()
 export class CategoryService {
@@ -69,10 +71,12 @@ export class CategoryService {
   async updateCategory(
     updateCategoryInput: UpdateCategoryInput,
   ): Promise<Category> {
+    const existeCategory = await this.categoryModel.findOne({
+      name: updateCategoryInput.name,
+    });
 
-    const existeCategory = await this.categoryModel.findOne({name: updateCategoryInput.name});
-
-    if (existeCategory) CategoryFilterException.prototype.handlerDBError(null, 2);
+    if (existeCategory)
+      CategoryFilterException.prototype.handlerDBError(null, 2);
 
     const category = await this.findCategoryById(updateCategoryInput.id);
 
@@ -97,7 +101,8 @@ export class CategoryService {
       { $project: this.aggregateProject() },
     ]);
 
-    if(categoria.length === 0) CategoryFilterException.prototype.handlerDBError(null, 1)
+    if (categoria.length === 0)
+      CategoryFilterException.prototype.handlerDBError(null, 1);
 
     return categoria[0];
   }
@@ -108,6 +113,59 @@ export class CategoryService {
       image: `category/${file.filename}`,
       updatedAt: new Date(),
     });
+  }
+
+
+  async findAllCategoryAdmin(
+    query: QueryCategoryAdminArgs,
+  ): Promise<CategoryAdminResponse> {
+    const { page, perPage, isActive } = query;
+
+    let total = 0;
+    let totalCategory = 0;
+    let categoria = [];
+
+    if (isActive !== undefined) {
+      categoria = await this.categoryModel.aggregate(
+        this.aggregateCategoryAdmin(page, perPage, isActive),
+      );
+      total = await this.categoryModel.countDocuments({
+        isActive: isActive,
+      });
+      totalCategory = Math.ceil(total / perPage);
+    } else {
+      categoria = await this.categoryModel.aggregate(
+        this.aggregateCategoryAdminAll(page, perPage),
+      );
+      total = await this.categoryModel.countDocuments();
+      totalCategory = Math.ceil(total / perPage);
+    }
+
+    return {
+      categoria,
+      totalCategory,
+    };
+  }
+
+  private aggregateCategoryAdmin(
+    page: number,
+    perPage: number,
+    isActive: boolean,
+  ) {
+    return [
+      { $match: { isActive: isActive } },
+      { $project: this.aggregateProject() },
+      { $skip: (page - 1) * perPage },
+      { $limit: perPage },
+    ];
+  }
+
+  private aggregateCategoryAdminAll(page: number, perPage: number) {
+    return [
+      { $project: this.aggregateProject() },
+      { $skip: (page - 1) * perPage },
+      { $limit: perPage },
+    ];
   }
 
   private aggregateProject() {
