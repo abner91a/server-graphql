@@ -21,7 +21,10 @@ export class AuthService {
     const user = await this.userService.addUser(signupInput);
 
     //TODO TOKEN
-    const token = 'asdasd';
+    const token = this.getJWToken(user.id);
+
+    // console.log('hola')
+
 
     return {
       token,
