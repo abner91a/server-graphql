@@ -29,7 +29,7 @@ export class BookService {
     const unique = [];
     let item: any;
     for (item of createBookInput.categories) {
-      console.log(item._id)
+      // console.log(item._id)
       if (!isValidObjectId(item._id)) {
         throw new BadRequestException(
           `${item._id} de la categoria no es valida  `,

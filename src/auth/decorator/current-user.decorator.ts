@@ -21,6 +21,7 @@ import { ValidRoles } from '../enum/rol.valido';
       if (context.getType() === 'http') {
         const user = context.switchToHttp().getRequest().user;
   
+
         if (!user) {
           throw new InternalServerErrorException(
             `No hay usuario dentro de request - debe haber un guard`,
@@ -50,6 +51,7 @@ import { ValidRoles } from '../enum/rol.valido';
   
       const user: User = ctx.getContext().req.user;
       
+      // console.log(ctx)
       
   
       if (!user) {

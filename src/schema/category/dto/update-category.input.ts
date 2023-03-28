@@ -1,6 +1,12 @@
 import { CreateCategoryInput } from './create-category.input';
 import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
-import { IsBoolean, IsMongoId, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsMongoId,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 import { toMongoObjectId } from 'src/common/transform/mongoId.transform';
 
@@ -12,8 +18,12 @@ export class UpdateCategoryInput extends PartialType(CreateCategoryInput) {
   // @Transform(toMongoObjectId)
   id: string;
 
+  @Field(() => Boolean, {
+    nullable: true,
+    description: 'Permite desactivar alguna categoria',
 
-  @Field(()=> Boolean, { nullable: true, description: "Permite desactivar alguna categoria" })
+  })
+  @IsOptional()
   @IsBoolean()
-  isActive: boolean
+  isActive: boolean;
 }

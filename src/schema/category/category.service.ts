@@ -67,8 +67,7 @@ export class CategoryService {
     return catergory;
   }
 
-  //Actualizar categoria
-  async updateCategory(
+  async updateCategoryAdmin(
     updateCategoryInput: UpdateCategoryInput,
   ): Promise<Category> {
     const existeCategory = await this.categoryModel.findOne({
@@ -80,15 +79,21 @@ export class CategoryService {
 
     const category = await this.findCategoryById(updateCategoryInput.id);
 
-    category.name = updateCategoryInput.name;
+    if (updateCategoryInput.name) {
+      category.name = updateCategoryInput.name;
+    }
+
+    if (updateCategoryInput.isActive !== undefined) {
+      category.isActive = updateCategoryInput.isActive;
+    }
+
     category.updatedAt = new Date();
-    category.isActive = updateCategoryInput.isActive;
 
     if (updateCategoryInput.image !== undefined) {
       category.image = updateCategoryInput.image;
     }
     //Todo cache: Guardar en el cache
-    category.save();
+    await category.save();
 
     return category;
   }
@@ -114,7 +119,6 @@ export class CategoryService {
       updatedAt: new Date(),
     });
   }
-
 
   async findAllCategoryAdmin(
     query: QueryCategoryAdminArgs,
