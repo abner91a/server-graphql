@@ -210,6 +210,12 @@ type Mutation {
   """
   updateBookUser(updateBookInput: UpdateBookUserInput!): Book!
 
+  """Permite al admin agregar un libro"""
+  addBookAdmin(addBookAdmin: CreateBookInputAdmin!): Book!
+
+  """Permite al admin actualizar un libro"""
+  updateBookAdmin(updateBookInput: UpdateBookAdminInput!): Book!
+
   """Crear reporte de algun libro rol: Usuario y admin"""
   updateReportBook(addReportBook: UpdateReportBookInput!): [ReportBook!]!
 
@@ -261,6 +267,22 @@ input UpdateBookUserInput {
   title: String
   description: String
   isCompleted: Boolean
+}
+
+input CreateBookInputAdmin {
+  title: String!
+  description: String
+  isPublished: Boolean = false
+  categories: [JSONObject!]!
+}
+
+input UpdateBookAdminInput {
+  id: String!
+  categories: [JSONObject!]
+  title: String
+  description: String
+  isCompleted: Boolean
+  isActive: Boolean
 }
 
 input UpdateReportBookInput {

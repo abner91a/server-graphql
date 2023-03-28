@@ -5,7 +5,7 @@ import { ValidRoles } from 'src/auth/enum/rol.valido';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 import { User } from 'src/schema/users/entities/user.entity';
 import { BookService } from '../../book.service';
-import { CreateBookInput, UpdateBookInput } from '../../dto/input';
+import { CreateBookInput } from '../../dto/input';
 import { UpdateBookUserInput } from '../../dto/input/update-book.input';
 import { Book } from '../../entities/book.entity';
 
@@ -14,6 +14,7 @@ import { Book } from '../../entities/book.entity';
 export class BookResolverUserMutation {
   constructor(private readonly bookService: BookService) {}
 
+  //Publicar Libro
   @Mutation(() => Book, {
     name: 'addBookUser',
     description: 'Permite al usuario agregar un libro',
@@ -23,7 +24,7 @@ export class BookResolverUserMutation {
     user: User,
     @Args('addBookUser') addBookInput: CreateBookInput,
   ) {
-    return await this.bookService.publishBook(addBookInput, user);
+    return await this.bookService.publishBookByUser(addBookInput, user);
   }
 
   @Mutation(() => Book, {
@@ -31,11 +32,10 @@ export class BookResolverUserMutation {
     description:
       'Permite al usuario actualizar su libro, esta validado que solo el autor quien creo el libro pueda actualizarlo',
   })
-  updateBookUser(
+  async updateBookUser(
     @CurrentUser([(ValidRoles.admin, ValidRoles.user)]) user: User,
     @Args('updateBookInput') updateBookInput: UpdateBookUserInput,
   ) {
-  
-    return this.bookService.updateBookUser(updateBookInput, user);
+    return this.bookService.updateBookByUser(updateBookInput, user);
   }
 }

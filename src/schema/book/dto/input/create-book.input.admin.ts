@@ -1,12 +1,9 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
-import { IsArray, IsObject, isObject, IsString, MinLength, validate, IsOptional, IsBoolean } from 'class-validator';
-import { GraphQLObjectType } from 'graphql';
-import GraphQLJSON, { GraphQLJSONObject  } from 'graphql-type-json';
-
-
+import { Field, InputType } from "@nestjs/graphql";
+import { IsArray, IsBoolean, IsOptional, IsString, MinLength } from "class-validator";
+import { GraphQLJSONObject } from "graphql-type-json";
 
 @InputType()
-export class CreateBookInput {
+export class CreateBookInputAdmin {
 
   @Field(() => String )
   @IsString()
@@ -26,5 +23,3 @@ export class CreateBookInput {
   @IsArray()
   categories:string[];
 }
-
-
