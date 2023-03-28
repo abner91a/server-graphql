@@ -10,6 +10,7 @@ import { Book } from './entities/book.entity';
 import { BookFilterException } from 'src/common/filters/book.filter';
 import { QueryArgs } from './dto/args/query.book.args';
 import { BookListResponse } from './types/bookCategoryResponse.types';
+import { UpdateBookUserInput } from './dto/input/update-book.input';
 
 interface categoryInterface {
   _id: string;
@@ -25,11 +26,70 @@ export class BookService {
   ) {}
 
   async publishBook(createBookInput: CreateBookInput, user: User) {
+    const existBook = await this.bookModel.findOne({
+      title: createBookInput.title,
+    });
+    if (existBook) BookFilterException.prototype.handlerDBError(null, 4);
 
+    await this.verificarCategoria(createBookInput.categories);
+
+    for (let i = 0; i < createBookInput.categories.length; i++) {
+      const categoryId = await this.categoryService.categoryMultipleId(
+        createBookInput.categories[i],
+      );
+    }
+
+    const categoriaCreada = await this.bookModel.create({
+      _id: new mongoose.Types.ObjectId(),
+      ...createBookInput,
+      authorId: user._id,
+      authorName: user.fullname,
+      isPublished: createBookInput.isPublished,
+    });
+    return categoriaCreada;
+  }
+
+  async updateBookUser(updateBookInput: UpdateBookUserInput, user: User) {
+    const { id, categories, title, description,isCompleted } = updateBookInput;
+
+    const book = await this.findByIdBook(id);
+
+    if (book.authorId.toString() !== user._id.toString())
+      BookFilterException.prototype.handlerDBError(null, 3);
+
+    if (categories !== undefined) {
+      await this.verificarCategoria(categories);
+
+      for (let i = 0; i < categories.length; i++) {
+        const hola = await this.categoryService.categoryMultipleId(
+          categories[i],
+        );
+      }
+    }
+   if (title) {
+     const existeTitulo = await this.bookModel.findOne({
+       title: updateBookInput.title,
+     });
+     if (existeTitulo) 
+       BookFilterException.prototype.handlerDBError(null, 4);
+      
+   }
+
+   if(categories) book.categories = categories;
+   if(title) book.title = title;
+   if(description) book.description = description;
+   //TODO: Revisar que el admin pueda aprobar esto
+   if(isCompleted !== undefined) book.isCompleted = isCompleted;
+    book.updatedAt = new Date();
+    await book.save();
+
+    return book;
+  }
+
+  private async verificarCategoria(categoria) {
     const unique = [];
     let item: any;
-    for (item of createBookInput.categories) {
-      // console.log(item._id)
+    for (item of categoria) {
       if (!isValidObjectId(item._id)) {
         throw new BadRequestException(
           `${item._id} de la categoria no es valida  `,
@@ -43,113 +103,9 @@ export class BookService {
       if (!isDuplicate) {
         unique.push(item);
       } else {
-        throw new BadRequestException(`Categorua duplicada`);
+        throw new BadRequestException(`Categoria duplicada`);
       }
     }
-
-    const existBook = await this.bookModel.findOne({
-      title: createBookInput.title,
-    });
-
-    if (existBook) BookFilterException.prototype.handlerDBError(null, 4);
-
-    // createBookInput.categories.forEach((category: any) => {
-    //   if (!isValidObjectId(category._id)) {
-    //     throw new BadRequestException(
-    //       `${category._id} de la categoria no es valida  `,
-    //     );
-    //   }
-    //   if (!category.name)
-    //     throw new BadRequestException(
-    //       `El nombre de la categoria no puede estar vacio`,
-    //     );
-    // });
-
-    for (let i = 0; i < createBookInput.categories.length; i++) {
-      const categoryId = await this.categoryService.categoryMultipleId(
-        createBookInput.categories[i],
-      );
-    }
-
-    const categoriaCreada = await this.bookModel.create({
-      _id: new mongoose.Types.ObjectId(),
-      ...createBookInput,
-      authorId: user._id,
-      authorName: user.fullname,
-    });
-    return categoriaCreada;
-  }
-
-  async update(updateBookInput: UpdateBookInput, user: User) {
-    const getCategoryId = updateBookInput.categories.forEach(
-      (category: any) => {
-        if (!isValidObjectId(category._id)) {
-          throw new BadRequestException(
-            `${category._id} de la categoria no es valida  `,
-          );
-        }
-      },
-    );
-
-    // console.log(user)
-
-    for (let i = 0; i < updateBookInput.categories.length; i++) {
-      const hola = await this.categoryService.categoryMultipleId(
-        updateBookInput.categories[i],
-      );
-    }
-
-    if (updateBookInput.title) {
-      const existeTitulo = await this.bookModel.findOne({
-        title: updateBookInput.title,
-      });
-      if (existeTitulo) BookFilterException.prototype.handlerDBError(null, 4);
-    }
-
-    const book = await this.findByIdBook(updateBookInput.id);
-
-    // console.log(book)
-
-    //Revisar
-    if (book.authorId.toString() !== user._id.toString())
-      BookFilterException.prototype.handlerDBError(null, 3);
-
-    //TODO: REVISAR UPDATE LIBRO
-    // if (updateBookInput.rol) {
-    //   if (user.user_type === 2) {
-    //     this.actualizarAdm(book, updateBookInput);
-    //     // console.log(book)
-    //   } else {
-    //     BookFilterException.prototype.handlerDBError(null, 3);
-    //   }
-    // }
-
-    if (updateBookInput.description)
-      book.description = updateBookInput.description;
-    if (updateBookInput.categories)
-      book.categories = updateBookInput.categories;
-    if (updateBookInput.title) book.title = updateBookInput.title;
-
-    if (updateBookInput.publicar) {
-      if (updateBookInput.publicar === 'si') book.isPublished = true;
-      if (updateBookInput.publicar === 'no') book.isPublished = false;
-    }
-    if (updateBookInput.completado) {
-      if (updateBookInput.completado === 'si') book.isPublished = true;
-      if (updateBookInput.completado === 'no') book.isPublished = false;
-    }
-
-    book.updatedAt = new Date();
-
-    if (!book) BookFilterException.prototype.handlerDBError(null, 2);
-
-    // console.log(book);
-
-    book.save();
-
-    // console.log(book)
-
-    return book;
   }
 
   async findByIdBook(id: string): Promise<Book> {

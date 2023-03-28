@@ -51,7 +51,7 @@ export class UploadController {
   //Multer upload file
   
 
-
+  //TODO: Falta implementar el guard para que solo el usuario que creo el libro pueda subir la imagen
   @Post('book/:id')
   @UseGuards(JwtAuthGuard, BookidGuard)
   @UseInterceptors(

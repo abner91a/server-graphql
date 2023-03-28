@@ -69,11 +69,6 @@ export class CategoryService {
   }
 
   async categoryMultipleId(query) {
-    // const category = await this.categoryModel.findById(id);
-
-    // if (!category) CategoryFilterException.prototype.handlerDBError(null, 1);
-
-    // console.log(query)
 
     const catergory = await this.categoryModel.find(query);
 

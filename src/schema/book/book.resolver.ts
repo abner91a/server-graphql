@@ -1,4 +1,5 @@
-export { BookResolverUserMutation } from "./resolvers/mutation";
+export { BookResolverUserMutation } from "./resolvers/mutation/book.user.mutation";
+
 
 
 
@@ -26,19 +27,7 @@ export { BookResolverUserMutation } from "./resolvers/mutation";
 
 
 
-//   //ACTUALIZAR LIBRO USUARIO
-//   @Mutation(() => Book, {
-//     name: 'updateBookUser',
-//     description:
-//       'Permite al usuario actualizar su libro, esta validado que solo el autor quien creo el libro pueda actualizarlo',
-//   })
-//   updateBookUser(
-//     @CurrentUser([(ValidRoles.admin, ValidRoles.user, ValidRoles.editor)]) user: User,
-//     @Args('updateBookInput') updateBookInput: UpdateBookInput,
-//   ) {
-//     //Todo Validar que el titulo no exista en la BD
-//     return this.bookService.update(updateBookInput, user);
-//   }
+
 
 //     //TODO: revisar que se pueda hacer query sin categoria ID
 //   @Query(() => BookListResponse, {
