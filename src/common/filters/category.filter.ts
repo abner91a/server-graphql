@@ -22,6 +22,14 @@ export class CategoryFilterException {
       });
     }
 
+    if (code === 3) {
+      throw new BadRequestException('Error: Fuera limita de pagina', {
+        cause: new Error(),
+        description: 'Fuera limite de pagina',
+      });
+    }
+
+
 
     console.log(error);
 

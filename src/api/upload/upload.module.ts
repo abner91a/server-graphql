@@ -1,3 +1,4 @@
+import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { UploadService } from './upload.service';
 import { UploadController } from './upload.controller';
@@ -7,6 +8,6 @@ import { BookModule } from 'src/schema/book/book.module';
 @Module({
   controllers: [UploadController],
   providers: [UploadService],
-  imports: [CategoryModule,BookModule]
+  imports: [CategoryModule,BookModule,ConfigModule]
 })
 export class UploadModule {}

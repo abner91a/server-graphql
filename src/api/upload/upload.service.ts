@@ -10,11 +10,12 @@ import { fileFilter } from './helpers/file-filter.helpers';
 import { fileNamer } from './helpers/fileNamer.helpers';
 
 
-
 @Injectable()
 export class UploadService {
   constructor(private readonly categoryService: CategoryService, private readonly bookService: BookService
     ) {}
+
+
 
   async uploadFileCategory(id, file) {
     if (!file) {
@@ -24,14 +25,15 @@ export class UploadService {
     const categoria = await this.categoryService.findByIdUpdate(id, file);
 
     categoria.image = `category/${file.filename}`;
+    categoria.imageCDN = `${process.env.CDN_CATEGORIA_IMG}category/${file.filename}`;
 
-    const bunny = new BunnyCDNStorage(
+    const bunnyCategory = new BunnyCDNStorage(
       process.env.IMAGEN_KEY,
       'api-gatito',
       'category',
     );
- 
-    const img = await bunny.upload(file.path);
+    
+    await bunnyCategory.upload(file.path);
 
     
     return categoria;
@@ -49,13 +51,13 @@ export class UploadService {
 
     book.image = `book/${file.filename}`;
 
-    const bunny = new BunnyCDNStorage(
-      process.env.IMAGEN_KEY,
-      'api-gatito',
-      'book',
-    );
+    // const bunny = new BunnyCDNStorage(
+    //   process.env.IMAGEN_KEY,
+    //   'api-gatito',
+    //   'book',
+    // );
  
-    const img = await bunny.upload(file.path);
+    // const img = await bunny.upload(file.path);
 
     
     return book;

@@ -2,6 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { isValidObjectId } from 'mongoose';
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { CategoryService } from '../category.service';
+import { ValidRoles } from 'src/auth/enum/rol.valido';
 
 @Injectable()
 export class CategoryidGuard implements CanActivate {
@@ -18,17 +19,20 @@ export class CategoryidGuard implements CanActivate {
       throw new BadRequestException(`${idCategory.id} no es un valor valido  `);
     }
 
-    if(user.user_type !== 2 ){
-      throw new BadRequestException(`${user.user_type} No tienes rango para actualizarla`);
-
+    for (const role of user.roles) {
+      // console.log(role)
+        if(role === ValidRoles.admin){
+          const categoriaValida =  await this.categoryService.findCategoryById(idCategory.id);
+          return true
+        }
     }
 
 
-    const categoriaValida =  await this.categoryService.findCategoryById(idCategory.id);
-
+  
+    throw new BadRequestException(` No tienes privilegios para realizar esta accion  `);
 
 
     // 
-    return true;
+    return false;
   }
 }

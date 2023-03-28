@@ -46,7 +46,12 @@ export class CategoryService {
       { $limit: limit },
     ]);
 
-    const countCategory = await this.categoryModel.countDocuments({ isActive: true });
+    if (categoria.length === 0)
+      CategoryFilterException.prototype.handlerDBError(null, 3);
+
+    const countCategory = await this.categoryModel.countDocuments({
+      isActive: true,
+    });
     const totalPage = Math.ceil(countCategory / perPage);
     return {
       categoria,
@@ -127,6 +132,7 @@ export class CategoryService {
     // console.log(file)
     return await this.categoryModel.findByIdAndUpdate(id, {
       image: `category/${file.filename}`,
+      imageCDN: `${process.env.CDN_CATEGORIA_IMG}category/${file.filename}`,
       updatedAt: new Date(),
     });
   }
@@ -191,13 +197,7 @@ export class CategoryService {
       // imageCDN: {
       //   $concat: [process.env.CDN_CATEGORIA_IMG, '$image'],
       // },
-      imageCDN: {
-        $cond: [
-          { $eq: ['$imageCDN', 'null'] },
-          '$image',
-          { $concat: [process.env.CDN_CATEGORIA_IMG, 'default.png'] },
-        ],
-      },
+      imageCDN: 1,
       // isCompleted: 1,
       booksCount: 1,
       isActive: 1,
