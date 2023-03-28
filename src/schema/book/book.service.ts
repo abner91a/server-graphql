@@ -25,6 +25,12 @@ export class BookService {
     private readonly bookModel: Model<Book>,
   ) {}
 
+  //ADMIN 
+
+
+
+
+  ////////////USUARIO
   async publishBook(createBookInput: CreateBookInput, user: User) {
     const existBook = await this.bookModel.findOne({
       title: createBookInput.title,
@@ -86,27 +92,7 @@ export class BookService {
     return book;
   }
 
-  private async verificarCategoria(categoria) {
-    const unique = [];
-    let item: any;
-    for (item of categoria) {
-      if (!isValidObjectId(item._id)) {
-        throw new BadRequestException(
-          `${item._id} de la categoria no es valida  `,
-        );
-      }
-      if (!item.name)
-        throw new BadRequestException(
-          `El nombre de la categoria no puede estar vacio`,
-        );
-      const isDuplicate = unique.find((obj) => obj._id === item._id);
-      if (!isDuplicate) {
-        unique.push(item);
-      } else {
-        throw new BadRequestException(`Categoria duplicada`);
-      }
-    }
-  }
+
 
   async findByIdBook(id: string): Promise<Book> {
     const book = await this.bookModel.findById(id);
@@ -190,26 +176,30 @@ export class BookService {
   //TODO ME GUSTA EL LIBRO
   //CREAR REPORTAR LIBRO
 
-  private actualizarAdm(book: Book, updateBookInput: UpdateBookInput): Book {
-    if (updateBookInput.bloquearLibro === 'si') book.isBlocked = true;
-    if (updateBookInput.bloquearLibro === 'no') book.isBlocked = false;
-    if (updateBookInput.isApprovedBook === 'si') book.isApproved = true;
-    if (updateBookInput.isApprovedBook === 'no') book.isApproved = false;
-    if (updateBookInput.activo === 'si') {
-      book.isActive = true;
-    }
-    if (updateBookInput.activo === 'no') {
-      book.isActive = false;
-      book.isPublished = false;
-    }
 
-    return book;
+  //Utilidades
+  private async verificarCategoria(categoria) {
+    const unique = [];
+    let item: any;
+    for (item of categoria) {
+      if (!isValidObjectId(item._id)) {
+        throw new BadRequestException(
+          `${item._id} de la categoria no es valida  `,
+        );
+      }
+      if (!item.name)
+        throw new BadRequestException(
+          `El nombre de la categoria no puede estar vacio`,
+        );
+      const isDuplicate = unique.find((obj) => obj._id === item._id);
+      if (!isDuplicate) {
+        unique.push(item);
+      } else {
+        throw new BadRequestException(`Categoria duplicada`);
+      }
+    }
   }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} book`;
-  // }
-
+  
   async findByIdUpdateBookPortada(id: string, file): Promise<Book> {
     // console.log(file)
     return await this.bookModel.findByIdAndUpdate(id, {

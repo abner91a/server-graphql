@@ -1,5 +1,6 @@
-export { BookResolverUserMutation } from "./resolvers/mutation/book.user.mutation";
+export { BookResolverAdminMutation } from "./resolvers/mutation/book.admin.mutation";
 
+export { BookResolverUserMutation } from "./resolvers/mutation/book.user.mutation";
 
 
 
