@@ -8,13 +8,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const ctx = GqlExecutionContext.create(context);
     const request = ctx.getContext().req;
 
-    // console.log(request)
-
-    // if (request) {
-    //   throw new InternalServerErrorException(
-    //     `No hay usuario dentro de request - debe haber un guard`,
-    //   );
-    // }
+    if (!request) {
+      throw new Error('Request not found');
+    }
 
     return request;
   }

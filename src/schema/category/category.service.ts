@@ -7,6 +7,8 @@ import { UpdateCategoryInput } from './dto/update-category.input';
 import { Category } from './entities/category.entity';
 import { QueryCategoryAdminArgs } from './dto/args/query.category.admin.args';
 import { CategoryAdminResponse } from './type/categoryResponse';
+import { QueryCategoryUserArgs } from './dto/args/query.category.user.args';
+import { CategoryUserResponse } from './type/categoryResponseUser';
 
 @Injectable()
 export class CategoryService {
@@ -31,17 +33,26 @@ export class CategoryService {
     return categoria;
   }
 
-  async findAll(): Promise<Category[]> {
+  async findAll(query: QueryCategoryUserArgs): Promise<CategoryUserResponse> {
     // const categoria = await this.categoryModel.find();
+    const { page, perPage } = query;
+    const skip = (page - 1) * perPage;
+    const limit = perPage;
 
     const categoria = await this.categoryModel.aggregate([
       { $match: { isActive: true } },
       { $project: this.aggregateProject() },
+      { $skip: skip },
+      { $limit: limit },
     ]);
 
-    // console.log(categoria);
-
-    return categoria;
+    const countCategory = await this.categoryModel.countDocuments({ isActive: true });
+    const totalPage = Math.ceil(countCategory / perPage);
+    return {
+      categoria,
+      totalPage,
+      totalCategoria: countCategory,
+    };
   }
 
   async findCategoryById(id: string): Promise<Category> {
@@ -177,8 +188,15 @@ export class CategoryService {
       _id: 1,
       name: 1,
       image: 1,
+      // imageCDN: {
+      //   $concat: [process.env.CDN_CATEGORIA_IMG, '$image'],
+      // },
       imageCDN: {
-        $concat: [process.env.CDN_CATEGORIA_IMG, '$image'],
+        $cond: [
+          { $eq: ['$imageCDN', 'null'] },
+          '$image',
+          { $concat: [process.env.CDN_CATEGORIA_IMG, 'default.png'] },
+        ],
       },
       // isCompleted: 1,
       booksCount: 1,

@@ -9,23 +9,32 @@ import { ValidRoles } from 'src/auth/enum/rol.valido';
 import { Category } from '../../entities/category.entity';
 import { CategoryService } from '../../category.service';
 import { User } from 'src/schema/users/entities/user.entity';
+import { CategoryUserResponse } from '../../type/categoryResponseUser';
+import { QueryCategoryUserArgs } from '../../dto/args/query.category.user.args';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Category)
 export class CategoryResolverUserQuery {
   constructor(private readonly categoryService: CategoryService) {}
 
-  //////USER
+  // @Query(() => [Category], {
+  //   name: 'getAllcategory',
+  //   description: 'Trae todas las categorias',
+  // })
+  // async getAllCategory(
+  //   @CurrentUser([(ValidRoles.user)]) user: User,
+  // ): Promise<Category[]> {
 
-  @Query(() => [Category], {
-    name: 'getAllcategory',
-    description: 'Trae todas las categorias',
-  })
-  async getAllCategory(
-    @CurrentUser([(ValidRoles.user)]) user: User,
-  ): Promise<Category[]> {
+  //   return await this.categoryService.findAll();
+  // }
 
-    return await this.categoryService.findAll();
+  @Query(() => CategoryUserResponse, { name: 'getAllCategoryUser' })
+  async getAllCategoryUser(
+    @Args('query') query: QueryCategoryUserArgs,
+    @CurrentUser([(ValidRoles.editor, ValidRoles.admin, ValidRoles.user)])
+    user: User,
+  ):Promise<CategoryUserResponse> {
+    return await this.categoryService.findAll(query);
   }
 
   @Query(() => Category, {
@@ -38,6 +47,4 @@ export class CategoryResolverUserQuery {
   ): Promise<Category[]> {
     return await this.categoryService.findByCategoryId(id);
   }
-
-
 }

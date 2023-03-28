@@ -40,6 +40,12 @@ type CategoryAdminResponse {
   totalCategory: Float
 }
 
+type CategoryUserResponse {
+  categoria: [Category!]
+  totalCategoria: Float
+  totalPage: Float
+}
+
 type Catype {
   _id: ID!
   name: String!
@@ -132,9 +138,7 @@ type Query {
 
   """Desarrollo solo, para comprobar token"""
   revisarToken: AuthResponse!
-
-  """Trae todas las categorias"""
-  getAllcategory: [Category!]!
+  getAllCategoryUser(query: QueryCategoryUserArgs!): CategoryUserResponse!
 
   """Trare una categoria"""
   getIdcategory(id: ID!): Category!
@@ -156,6 +160,11 @@ input UserAllQueryArgs {
 input LoginInput {
   email: String!
   password: String!
+}
+
+input QueryCategoryUserArgs {
+  page: Int! = 1
+  perPage: Int! = 1
 }
 
 input QueryCategoryAdminArgs {

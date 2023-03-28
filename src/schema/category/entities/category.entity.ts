@@ -58,6 +58,10 @@ export class Category extends Document {
   updatedAt: Date;
 
   @Field(() => String, {nullable: true, description: "Solo para obtener la imagen con cdn"})
+  @Prop({
+    type: String,
+    default: "null",
+  })
   imageCDN: string;
 }
 
