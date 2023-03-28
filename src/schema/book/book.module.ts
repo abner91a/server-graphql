@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { BookService } from './book.service';
-import { BookResolver } from './book.resolver';
+
 import { CategoryModule } from '../category/category.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Book, BookSchema } from './entities/book.entity';
+import { BookResolverUserMutation } from './book.resolver';
 
 @Module({
-  providers: [BookResolver, BookService,BookService],
+  providers: [BookResolverUserMutation, BookService,BookService],
   imports: [
     MongooseModule.forFeature([
       {
