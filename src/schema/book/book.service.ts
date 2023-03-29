@@ -76,14 +76,13 @@ export class BookService {
       }
     }
 
-    if(title !== undefined) book.title = title;
-    if(description !== undefined) book.description = description;
-    if(isCompleted !== undefined) book.isCompleted = isCompleted;
-    if(isActive !== undefined) book.isActive = isActive;
-    if(categories !== undefined) book.categories = categories;
+    if (title !== undefined) book.title = title;
+    if (description !== undefined) book.description = description;
+    if (isCompleted !== undefined) book.isCompleted = isCompleted;
+    if (isActive !== undefined) book.isActive = isActive;
+    if (categories !== undefined) book.categories = categories;
     book.updatedAt = new Date();
     await book.save();
-
 
     return book;
   }
@@ -169,7 +168,8 @@ export class BookService {
 
     let queryBook = {
       'categories._id': { $in: [new mongoose.Types.ObjectId(categoryId)] },
-      isApproved: true,
+      // isApproved: true,
+      isActive: false,
     };
 
     // Todo agregar isCompleted
@@ -180,11 +180,11 @@ export class BookService {
       sortData = { views: -1 };
     } else if (sort === 'avgRating') {
       sortData = { avgRating: -1 };
-    } else {
+    } else if (sort === 'createdAt') {
       sortData = { createdAt: -1 };
     }
 
-    const contador = await this.bookModel.count(queryBook);
+    const contador = await this.bookModel.countDocuments(queryBook);
 
     // console.log(sortData);
     const book = await this.bookModel.aggregate([
@@ -195,7 +195,9 @@ export class BookService {
       { $project: this.aggregateProject() },
     ]);
 
-    const totalPagina = Math.ceil(contador / perPage);
+
+
+    const totalPagina = Math.ceil(contador / perPage) || 1;
 
     return {
       book,

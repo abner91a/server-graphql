@@ -8,12 +8,14 @@ import {
   BookResolverAdminMutation,
 
   BookResolverUserMutation,
+  BookResolverUserQuery,
 } from './book.resolver';
 
 @Module({
   providers: [
     BookResolverUserMutation,
      BookResolverAdminMutation,
+     BookResolverUserQuery,
     BookService,
     
   ],

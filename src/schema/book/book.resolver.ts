@@ -1,3 +1,5 @@
+export { BookResolverUserQuery } from "./resolvers/query/book.user.query";
+
  export { BookResolverAdminMutation } from "./resolvers/mutation/book.admin.mutation";
 
 export { BookResolverUserMutation } from "./resolvers/mutation/book.user.mutation";

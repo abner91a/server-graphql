@@ -78,6 +78,11 @@ type Book {
   imageCDN: String
 }
 
+type BookListResponse {
+  book: [Book!]!
+  totalPagina: Float!
+}
+
 type ReportBook {
   _id: ID!
   bookId: ID!
@@ -144,6 +149,12 @@ type Query {
   getIdcategory(id: ID!): Category!
   getAllCategoryAdmin(query: QueryCategoryAdminArgs!): CategoryAdminResponse!
 
+  """Obtenemos un libro por id"""
+  getBookInfo(query: QueryArgsBook!): [Book!]!
+
+  """Obtiene la lista de libros con query solo para usuarios"""
+  getAllBook(query: QueryArgs!): BookListResponse!
+
   """Lista de Todo los reporte por query"""
   reportBookAll(query: QueryReportArgs!): ReportListResponse!
   getOneBookpart(id: String!): Bookpart!
@@ -171,6 +182,19 @@ input QueryCategoryAdminArgs {
   page: Int! = 1
   perPage: Int! = 1
   isActive: Boolean
+}
+
+input QueryArgsBook {
+  bookId: String!
+}
+
+input QueryArgs {
+  page: Int!
+  perPage: Int!
+  categoryId: String!
+
+  """views,avgRating"""
+  sort: String
 }
 
 input QueryReportArgs {
