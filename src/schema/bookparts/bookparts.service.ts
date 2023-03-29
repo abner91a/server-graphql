@@ -1,6 +1,6 @@
 import { BookService } from 'src/schema/book/book.service';
 import { Injectable } from '@nestjs/common';
-import { AddBookPart } from './dto/input';
+import { AddBookPart, AddBookPartAdmin, EditBookPartAdmin } from './dto/input';
 import { InjectModel } from '@nestjs/mongoose';
 import { Bookpart } from './entities/bookpart.entity';
 import mongoose, { Model } from 'mongoose';
@@ -24,6 +24,107 @@ export class BookpartsService {
     private readonly bookPartModel: Model<Bookpart>,
   ) {}
 
+  //admin
+  async addPartBookAdmin(
+    addBookPartAdmin: AddBookPartAdmin,
+    user: User,
+  ): Promise<Bookpart> {
+    const { idBook, title, content, isActive } = addBookPartAdmin;
+
+    const existBook = await this.bookService.findByIdBook(idBook);
+
+    const existeBookPart = await this.bookPartModel.findOne({ title });
+    if (existeBookPart)
+      BookPartFilterException.prototype.handlerDBError(null, 5);
+
+    const rol = user.roles.some((rol) => rol === 'admin' || rol === 'editor');
+    if (!rol) BookPartFilterException.prototype.handlerDBError(null, 1);
+
+    let queryBook = {
+      bookId: new mongoose.Types.ObjectId(idBook),
+      // isPublished: false,
+    };
+
+    const lastChapter = await this.bookPartModel.aggregate([
+      { $match: queryBook },
+      { $sort: { chapter: -1 } },
+      { $limit: 1 },
+      { $project: this.aggregateProject() },
+    ]);
+
+    if (!lastChapter.length) {
+      const firstChapter = await this.bookPartModel.create({
+        _id: new mongoose.Types.ObjectId(),
+        title,
+        content,
+        bookId: new mongoose.Types.ObjectId(idBook),
+        authorId: user._id,
+        isActive,
+      });
+
+      existBook.total_chapters = 1;
+      existBook.updatedAt = new Date();
+      existBook.save();
+
+      return firstChapter;
+    }
+
+    const addchapter = await this.bookPartModel.create({
+      _id: new mongoose.Types.ObjectId(),
+      title,
+      content,
+      bookId: new mongoose.Types.ObjectId(idBook),
+      chapter: lastChapter[0].chapter + 1,
+      authorId: user._id,
+      isActive,
+    });
+
+    existBook.total_chapters = lastChapter[0].chapter + 1;
+    existBook.updatedAt = new Date();
+    existBook.save();
+
+    return addchapter;
+  }
+
+  async updateChapterAdmin(editBookPart: EditBookPartAdmin, user: User) {
+    const { id, title, content, isActive } = editBookPart;
+
+    const existTitle = await this.bookPartModel.findOne({ title });
+    if (existTitle) BookPartFilterException.prototype.handlerDBError(null, 5);
+
+    const existChapter = await this.findByChapterBook(id);
+
+    const rol = user.roles.some((rol) => rol === 'admin' || rol === 'editor');
+    if (!rol) BookPartFilterException.prototype.handlerDBError(null, 1);
+
+    if (editBookPart.title) {
+      existChapter.title = editBookPart.title.trim();
+    }
+
+    if (editBookPart.content) {
+      existChapter.content = editBookPart.content;
+    }
+    if (editBookPart.isActive === false || editBookPart.isActive === true) {
+      existChapter.isActive = editBookPart.isActive;
+    }
+
+    if (editBookPart.isApproved === false || editBookPart.isApproved === true) {
+      existChapter.isApproved = editBookPart.isApproved;
+    }
+
+    if (
+      editBookPart.isPublished === false ||
+      editBookPart.isPublished === true
+    ) {
+      existChapter.isPublished = editBookPart.isPublished;
+    }
+
+    existChapter.updatedAt = new Date();
+    await existChapter.save();
+    return existChapter;
+  }
+
+  ///user
   async addPartBook(addBookPart: AddBookPart, user: User) {
     const { idBook, title, content } = addBookPart;
 

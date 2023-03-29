@@ -251,6 +251,10 @@ type Mutation {
 
   """edita un capitulo de algun libro"""
   editBookPart(editBookPart: EditBookPart!): Bookpart!
+
+  """Agrega un capitulo al libro"""
+  addBookPartAdmin(addBookPartAdmin: AddBookPartAdmin!): Bookpart!
+  editBookPartAdmin(editBookPart: EditBookPartAdmin!): Bookpart!
 }
 
 input SignupInput {
@@ -331,4 +335,20 @@ input EditBookPart {
   idpartBook: String!
   title: String
   content: String
+}
+
+input AddBookPartAdmin {
+  idBook: String!
+  title: String!
+  content: String!
+  isActive: Boolean! = false
+}
+
+input EditBookPartAdmin {
+  id: String!
+  title: String
+  content: String
+  isActive: Boolean
+  isApproved: Boolean
+  isPublished: Boolean
 }
