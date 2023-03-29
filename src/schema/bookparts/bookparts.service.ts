@@ -6,7 +6,6 @@ import { Bookpart } from './entities/bookpart.entity';
 import mongoose, { Model } from 'mongoose';
 import { User } from '../users/entities/user.entity';
 import { BookPartFilterException } from 'src/common/filters/bookPart.filter';
-import { EditBookPart } from './dto/input/editBookPart';
 import { QueryBookPartArgs } from './dto/args/query.bookparts.args';
 import {
   BookListReadResponse,
@@ -15,6 +14,7 @@ import {
 } from './types/bookPart.types';
 import { QueryBookAllPartArgs } from './dto/args';
 import axios from 'axios';
+import { EditBookPartUser } from './dto/input/editBookPart';
 
 @Injectable()
 export class BookpartsService {
@@ -125,13 +125,17 @@ export class BookpartsService {
   }
 
   ///user
-  async addPartBook(addBookPart: AddBookPart, user: User) {
-    const { idBook, title, content } = addBookPart;
+  async addPartBookUser(addBookPart: AddBookPart, user: User) {
+    const { idBook, title, content, isPublished } = addBookPart;
 
     const existBook = await this.bookService.findByIdBook(idBook);
 
-    if (user._id.toString() !== existBook.authorId.toString())
+    if (user._id.toString() !== existBook.authorId.toString()) {
       BookPartFilterException.prototype.handlerDBError(null, 1);
+    }
+
+    const existTitle = await this.bookPartModel.findOne({ title });
+    if (existTitle) BookPartFilterException.prototype.handlerDBError(null, 5);
 
     let queryBook = {
       bookId: new mongoose.Types.ObjectId(idBook),
@@ -152,6 +156,8 @@ export class BookpartsService {
         content,
         bookId: new mongoose.Types.ObjectId(idBook),
         authorId: user._id,
+      isPublished,
+
       });
 
       existBook.total_chapters = 1;
@@ -162,6 +168,9 @@ export class BookpartsService {
     }
 
     //funcional
+
+
+
     const addchapter = await this.bookPartModel.create({
       _id: new mongoose.Types.ObjectId(),
       title,
@@ -169,6 +178,7 @@ export class BookpartsService {
       bookId: new mongoose.Types.ObjectId(idBook),
       chapter: lastChapter[0].chapter + 1,
       authorId: user._id,
+      isPublished,
     });
 
     existBook.total_chapters = lastChapter[0].chapter + 1;
@@ -178,7 +188,11 @@ export class BookpartsService {
     return addchapter;
   }
 
-  async updateChapter(editBookPart: EditBookPart, user: User) {
+  async updateChapterUser(editBookPart: EditBookPartUser, user: User) {
+
+    const existTitle = await this.bookPartModel.findOne({ title: editBookPart.title });
+    if (existTitle) BookPartFilterException.prototype.handlerDBError(null, 5);
+
     const existChapter = await this.findByChapterBook(editBookPart.idpartBook);
 
     //Validamos si el autor es el original
@@ -192,6 +206,10 @@ export class BookpartsService {
 
     if (editBookPart.content) {
       existChapter.content = editBookPart.content;
+    }
+
+    if(editBookPart.isPublished === false || editBookPart.isPublished === true) {
+      existChapter.isPublished = editBookPart.isPublished;
     }
 
     existChapter.updatedAt = new Date();

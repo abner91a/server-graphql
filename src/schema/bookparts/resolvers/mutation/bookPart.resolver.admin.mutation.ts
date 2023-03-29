@@ -7,7 +7,6 @@ import { User } from 'src/schema/users/entities/user.entity';
 import { BookpartsService } from '../../bookparts.service';
 import { AddBookPart, EditBookPartAdmin } from '../../dto/input';
 import { AddBookPartAdmin } from '../../dto/input/adBookPartAdmin';
-import { EditBookPart } from '../../dto/input/editBookPart';
 import { Bookpart } from '../../entities/bookpart.entity';
 
 @UseGuards(JwtAuthGuard)

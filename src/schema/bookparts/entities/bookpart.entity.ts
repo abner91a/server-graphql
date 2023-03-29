@@ -62,7 +62,7 @@ export class Bookpart {
   //Cuando agregamos un capitulo
   @Prop({
     type: Boolean,
-    default: true,
+    default: false,
   })
   @Field(() => Boolean)
   isPublished: boolean;

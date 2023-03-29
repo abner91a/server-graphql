@@ -1,8 +1,8 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { IsMongoId, IsNotEmpty, IsOptional, isString, IsString, MinLength } from 'class-validator';
+import { IsBoolean, IsMongoId, IsNotEmpty, IsOptional, isString, IsString, MinLength } from 'class-validator';
 
 @InputType()
-export class EditBookPart {
+export class EditBookPartUser {
 
     // @Field(() => String)
     // @IsMongoId()
@@ -27,4 +27,10 @@ export class EditBookPart {
     @IsOptional()
     @IsString()
     content:string;
+
+    @Field(() => Boolean, { defaultValue: true})
+    @IsOptional()
+    @IsBoolean()
+    isPublished:boolean;
+
 }

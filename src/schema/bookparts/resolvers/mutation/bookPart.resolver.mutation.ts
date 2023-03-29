@@ -6,33 +6,33 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 import { User } from 'src/schema/users/entities/user.entity';
 import { BookpartsService } from '../../bookparts.service';
 import { AddBookPart } from '../../dto/input';
-import { EditBookPart } from '../../dto/input/editBookPart';
+import { EditBookPartUser } from '../../dto/input/editBookPart';
 import { Bookpart } from '../../entities/bookpart.entity';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => Bookpart)
-export class BookpartsMutationResolver {
+export class BookpartsMutationUserResolver {
   constructor(private readonly bookpartsService: BookpartsService) {}
 
   @Mutation(() => Bookpart, {
-    name: 'addBookPart',
-    description: 'Agrega un capitulo al libro',
+    name: 'addBookPartUser',
+    description: 'Usuario: Agrega un capitulo al libro',
   })
   createBookpart(
-    @Args('addBookPart') addBookPart: AddBookPart,
-    @CurrentUser([(ValidRoles.admin, ValidRoles.user, ValidRoles.editor)]) user: User,) {
-    return this.bookpartsService.addPartBook(addBookPart,user);
+    @Args('addBookPartUser') addBookPartUser: AddBookPart,
+    @CurrentUser([(ValidRoles.admin, ValidRoles.user)]) user: User,) {
+    return this.bookpartsService.addPartBookUser(addBookPartUser,user);
   }
 
   @Mutation(() => Bookpart, {
-    name: 'editBookPart',
-    description: 'edita un capitulo de algun libro',
+    name: 'editBookPartUser',
+    description: 'Usuario: edita un capitulo de algun libro',
   })
-  editBookPart(
-    @Args('editBookPart') editBookPart: EditBookPart,
-    @CurrentUser([(ValidRoles.admin, ValidRoles.user, ValidRoles.editor)]) user: User,
+  editBookPartUser(
+    @Args('editBookPartUser') editBookPartUser: EditBookPartUser,
+    @CurrentUser([(ValidRoles.admin, ValidRoles.user)]) user: User,
   ) {
-    return this.bookpartsService.updateChapter(editBookPart,user);
+    return this.bookpartsService.updateChapterUser(editBookPartUser,user);
 
   }
 

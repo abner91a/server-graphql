@@ -246,11 +246,11 @@ type Mutation {
   """Crear reporte de algun libro rol: Usuario y admin"""
   addReportBook(addReportBook: ReportBookInput!): ReportBook!
 
-  """Agrega un capitulo al libro"""
-  addBookPart(addBookPart: AddBookPart!): Bookpart!
+  """Usuario: Agrega un capitulo al libro"""
+  addBookPartUser(addBookPartUser: AddBookPart!): Bookpart!
 
-  """edita un capitulo de algun libro"""
-  editBookPart(editBookPart: EditBookPart!): Bookpart!
+  """Usuario: edita un capitulo de algun libro"""
+  editBookPartUser(editBookPartUser: EditBookPartUser!): Bookpart!
 
   """Agrega un capitulo al libro"""
   addBookPartAdmin(addBookPartAdmin: AddBookPartAdmin!): Bookpart!
@@ -329,12 +329,14 @@ input AddBookPart {
   idBook: String!
   title: String!
   content: String!
+  isPublished: Boolean! = false
 }
 
-input EditBookPart {
+input EditBookPartUser {
   idpartBook: String!
   title: String
   content: String
+  isPublished: Boolean! = true
 }
 
 input AddBookPartAdmin {
