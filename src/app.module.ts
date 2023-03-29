@@ -16,8 +16,14 @@ import { BookModule } from './schema/book/book.module';
 import GraphQLJSON, { GraphQLJSONObject  } from 'graphql-type-json';
 import { BookfeaturesModule } from './schema/bookfeatures/bookfeatures.module';
 import { BookpartsModule } from './schema/bookparts/bookparts.module';
+
+
 @Module({
   imports: [
+
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', 'public')
+    // }),
     ConfigModule.forRoot({  isGlobal: true }),
     MongooseModule.forRoot(process.env.MONGO_DB),
     GraphQLModule.forRoot<ApolloDriverConfig>({

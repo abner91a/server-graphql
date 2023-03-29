@@ -37,6 +37,13 @@ import {
         });
       }
   
+      if (code === 5) {
+        throw new BadRequestException('Error: El titulo del capitulo existe', {
+          cause: new Error(),
+          description: 'El Titulo existe',
+        });
+      }
+  
 
       console.log(error);
   

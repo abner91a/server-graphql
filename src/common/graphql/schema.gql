@@ -35,6 +35,17 @@ type Category {
   imageCDN: String
 }
 
+type CategoryAdminResponse {
+  categoria: [Category!]
+  totalCategory: Float
+}
+
+type CategoryUserResponse {
+  categoria: [Category!]
+  totalCategoria: Float
+  totalPage: Float
+}
+
 type Catype {
   _id: ID!
   name: String!
@@ -132,18 +143,17 @@ type Query {
 
   """Desarrollo solo, para comprobar token"""
   revisarToken: AuthResponse!
-
-  """Trae todas las categorias"""
-  getAllcategory: [Category!]!
+  getAllCategoryUser(query: QueryCategoryUserArgs!): CategoryUserResponse!
 
   """Trare una categoria"""
   getIdcategory(id: ID!): Category!
+  getAllCategoryAdmin(query: QueryCategoryAdminArgs!): CategoryAdminResponse!
+
+  """Obtenemos un libro por id"""
+  getBookInfo(query: QueryArgsBook!): [Book!]!
 
   """Obtiene la lista de libros con query solo para usuarios"""
   getAllBook(query: QueryArgs!): BookListResponse!
-
-  """Trae un libro por id"""
-  getBookInfo(query: QueryArgsBook!): [Book!]!
 
   """Lista de Todo los reporte por query"""
   reportBookAll(query: QueryReportArgs!): ReportListResponse!
@@ -163,6 +173,21 @@ input LoginInput {
   password: String!
 }
 
+input QueryCategoryUserArgs {
+  page: Int! = 1
+  perPage: Int! = 1
+}
+
+input QueryCategoryAdminArgs {
+  page: Int! = 1
+  perPage: Int! = 1
+  isActive: Boolean
+}
+
+input QueryArgsBook {
+  bookId: String!
+}
+
 input QueryArgs {
   page: Int!
   perPage: Int!
@@ -170,10 +195,6 @@ input QueryArgs {
 
   """views,avgRating"""
   sort: String
-}
-
-input QueryArgsBook {
-  bookId: String!
 }
 
 input QueryReportArgs {
@@ -200,18 +221,24 @@ type Mutation {
   createUsers(addUser: SignupInput!): AuthResponse!
 
   """Permite al adm agregar categoria"""
-  addCategory(createCategoryInput: CreateCategoryInput!): Category!
+  addCategoryAdmin(addCategory: CreateCategoryInput!): Category!
 
   """Permite al adm actualizar la categoria"""
-  updateCategory(createCategoryInput: UpdateCategoryInput!): Category!
+  updateCategoryAdmin(updateCategory: UpdateCategoryInput!): Category!
 
   """Permite al usuario agregar un libro"""
-  addBook(addBookUser: CreateBookInput!): Book!
+  addBookUser(addBookUser: CreateBookInput!): Book!
 
   """
   Permite al usuario actualizar su libro, esta validado que solo el autor quien creo el libro pueda actualizarlo
   """
-  updateBookUser(updateBookInput: UpdateBookInput!): Book!
+  updateBookUser(updateBookInput: UpdateBookUserInput!): Book!
+
+  """Permite al admin agregar un libro"""
+  addBookAdmin(addBookAdmin: CreateBookInputAdmin!): Book!
+
+  """Permite al admin actualizar un libro"""
+  updateBookAdmin(updateBookInput: UpdateBookAdminInput!): Book!
 
   """Crear reporte de algun libro rol: Usuario y admin"""
   updateReportBook(addReportBook: UpdateReportBookInput!): [ReportBook!]!
@@ -219,11 +246,15 @@ type Mutation {
   """Crear reporte de algun libro rol: Usuario y admin"""
   addReportBook(addReportBook: ReportBookInput!): ReportBook!
 
-  """Agrega un capitulo al libro"""
-  addBookPart(addBookPart: AddBookPart!): Bookpart!
+  """Usuario: Agrega un capitulo al libro"""
+  addBookPartUser(addBookPartUser: AddBookPart!): Bookpart!
 
-  """edita un capitulo de algun libro"""
-  editBookPart(editBookPart: EditBookPart!): Bookpart!
+  """Usuario: edita un capitulo de algun libro"""
+  editBookPartUser(editBookPartUser: EditBookPartUser!): Bookpart!
+
+  """Agrega un capitulo al libro"""
+  addBookPartAdmin(addBookPartAdmin: AddBookPartAdmin!): Bookpart!
+  editBookPartAdmin(editBookPart: EditBookPartAdmin!): Bookpart!
 }
 
 input SignupInput {
@@ -249,6 +280,7 @@ input UpdateCategoryInput {
 input CreateBookInput {
   title: String!
   description: String
+  isPublished: Boolean = false
   categories: [JSONObject!]!
 }
 
@@ -257,29 +289,28 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 """
 scalar JSONObject
 
-input UpdateBookInput {
+input UpdateBookUserInput {
+  id: String!
+  categories: [JSONObject!]
   title: String
   description: String
-  categories: [JSONObject!]
+  isCompleted: Boolean
+}
+
+input CreateBookInputAdmin {
+  title: String!
+  description: String
+  isPublished: Boolean = false
+  categories: [JSONObject!]!
+}
+
+input UpdateBookAdminInput {
   id: String!
-
-  """Si true y no false"""
-  publicar: String
-
-  """Si true y no false"""
-  completado: String
-
-  """Si true y no false"""
-  bloquearLibro: String
-
-  """Si true y no false"""
-  activo: String
-
-  """Si true y no false"""
-  isApprovedBook: String
-
-  """Pon e rol del admin"""
-  rol: String
+  categories: [JSONObject!]
+  title: String
+  description: String
+  isCompleted: Boolean
+  isActive: Boolean
 }
 
 input UpdateReportBookInput {
@@ -298,10 +329,28 @@ input AddBookPart {
   idBook: String!
   title: String!
   content: String!
+  isPublished: Boolean! = false
 }
 
-input EditBookPart {
+input EditBookPartUser {
   idpartBook: String!
   title: String
   content: String
+  isPublished: Boolean! = true
+}
+
+input AddBookPartAdmin {
+  idBook: String!
+  title: String!
+  content: String!
+  isActive: Boolean! = false
+}
+
+input EditBookPartAdmin {
+  id: String!
+  title: String
+  content: String
+  isActive: Boolean
+  isApproved: Boolean
+  isPublished: Boolean
 }

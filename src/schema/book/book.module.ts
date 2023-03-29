@@ -1,21 +1,33 @@
 import { Module } from '@nestjs/common';
 import { BookService } from './book.service';
-import { BookResolver } from './book.resolver';
+
 import { CategoryModule } from '../category/category.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Book, BookSchema } from './entities/book.entity';
+import {
+  BookResolverAdminMutation,
+
+  BookResolverUserMutation,
+  BookResolverUserQuery,
+} from './book.resolver';
 
 @Module({
-  providers: [BookResolver, BookService,BookService],
+  providers: [
+    BookResolverUserMutation,
+     BookResolverAdminMutation,
+     BookResolverUserQuery,
+    BookService,
+    
+  ],
   imports: [
     MongooseModule.forFeature([
       {
         name: Book.name,
-        schema: BookSchema 
+        schema: BookSchema,
       },
-      
     ]),
-    CategoryModule],
-    exports: [BookService]
+    CategoryModule,
+  ],
+  exports: [BookService],
 })
 export class BookModule {}

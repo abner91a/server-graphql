@@ -15,6 +15,22 @@ export class CategoryFilterException {
       });
     }
 
+    if (code === 2) {
+      throw new BadRequestException('Error: Nombre de la categoria  existe', {
+        cause: new Error(),
+        description: 'Categoria existe',
+      });
+    }
+
+    if (code === 3) {
+      throw new BadRequestException('Error: Fuera limita de pagina', {
+        cause: new Error(),
+        description: 'Fuera limite de pagina',
+      });
+    }
+
+
+
     console.log(error);
 
     throw new InternalServerErrorException(
