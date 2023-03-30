@@ -1,10 +1,8 @@
-export { BookResolverUserQuery } from "./resolvers/query/book.user.query";
+export { BookResolverUserQuery } from './resolvers/query/book.user.query';
+export { BookResolverAdminQuery } from './resolvers/query/book.admin.query';
 
- export { BookResolverAdminMutation } from "./resolvers/mutation/book.admin.mutation";
-
-export { BookResolverUserMutation } from "./resolvers/mutation/book.user.mutation";
-
-
+export { BookResolverAdminMutation } from './resolvers/mutation/book.admin.mutation';
+export { BookResolverUserMutation } from './resolvers/mutation/book.user.mutation';
 
 
 // import { QueryArgsBook } from './dto/args/queryOnebook.book.args';
@@ -28,19 +26,15 @@ export { BookResolverUserMutation } from "./resolvers/mutation/book.user.mutatio
 // export class BookResolver {
 //   constructor(private readonly bookService: BookService) {}
 
-
-
-
-
 //     //TODO: revisar que se pueda hacer query sin categoria ID
 //   @Query(() => BookListResponse, {
 //     name: 'getAllBook',
 //     description: 'Obtiene la lista de libros con query solo para usuarios',
 //   })
 //   findAll(
-//     @Args('query') query: QueryArgs, 
+//     @Args('query') query: QueryArgs,
 //     @CurrentUser([(ValidRoles.admin, ValidRoles.user, ValidRoles.editor)]) user: User,
-  
+
 //   ) {
 //     return this.bookService.findAllBookQuery(query);
 //   }
@@ -50,8 +44,6 @@ export { BookResolverUserMutation } from "./resolvers/mutation/book.user.mutatio
 //  async getBookId(@Args('query') query: QueryArgsBook  ) {
 //     return this.bookService.getBookDetail(query)
 //   }
-
-
 
 //   //TODO FUERTES
 //   //Guardar libro en la biblioteca

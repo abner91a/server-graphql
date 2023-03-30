@@ -37,4 +37,6 @@ export class EditBookPartAdmin {
     @IsOptional()
     @IsBoolean()
     isPublished:boolean;
+
+    
 }

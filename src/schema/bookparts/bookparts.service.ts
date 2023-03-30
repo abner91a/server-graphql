@@ -1,5 +1,5 @@
 import { BookService } from 'src/schema/book/book.service';
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { AddBookPart, AddBookPartAdmin, EditBookPartAdmin } from './dto/input';
 import { InjectModel } from '@nestjs/mongoose';
 import { Bookpart } from './entities/bookpart.entity';
@@ -15,10 +15,13 @@ import {
 import { QueryBookAllPartArgs } from './dto/args';
 import axios from 'axios';
 import { EditBookPartUser } from './dto/input/editBookPart';
+import { Book } from '../book/entities/book.entity';
+import { PaginationArgs } from 'src/common/dto/args/pagination.args';
 
 @Injectable()
 export class BookpartsService {
   constructor(
+    @Inject(forwardRef(() => BookService))
     private readonly bookService: BookService,
     @InjectModel(Bookpart.name)
     private readonly bookPartModel: Model<Bookpart>,
@@ -89,8 +92,11 @@ export class BookpartsService {
   async updateChapterAdmin(editBookPart: EditBookPartAdmin, user: User) {
     const { id, title, content, isActive } = editBookPart;
 
-    const existTitle = await this.bookPartModel.findOne({ title });
-    if (existTitle) BookPartFilterException.prototype.handlerDBError(null, 5);
+    if(editBookPart.title){    
+      const existTitle = await this.bookPartModel.findOne({ title: editBookPart.title });
+      if (existTitle) BookPartFilterException.prototype.handlerDBError(null, 5);
+     }
+  
 
     const existChapter = await this.findByChapterBook(id);
 
@@ -190,8 +196,11 @@ export class BookpartsService {
 
   async updateChapterUser(editBookPart: EditBookPartUser, user: User) {
 
+    if(editBookPart.title){    
     const existTitle = await this.bookPartModel.findOne({ title: editBookPart.title });
     if (existTitle) BookPartFilterException.prototype.handlerDBError(null, 5);
+   }
+
 
     const existChapter = await this.findByChapterBook(editBookPart.idpartBook);
 
@@ -341,6 +350,36 @@ export class BookpartsService {
 
     if (!bookPart.length)
       BookPartFilterException.prototype.handlerDBError(null, 4);
+
+    return bookPart;
+  }
+
+
+
+  async getAllChapterByBook(  book:Book, paginationArgs:PaginationArgs ): Promise<Bookpart[]> {
+    const {page, perPage } = paginationArgs;
+    const { _id } = book;
+
+    let queryBook = {
+      bookId: _id,
+      // isPublished: false,
+    };
+
+    // console.log(_id)
+
+
+    const bookPart = await this.bookPartModel.aggregate([
+      { $match: queryBook },
+      { $sort: { chapter: 1 } },
+      { $skip: (page - 1) * perPage },
+      { $limit: perPage },
+      // { $project: this.chapterProject() },
+    ]);
+
+    console.log(bookPart)
+
+    if (!bookPart.length)
+      BookPartFilterException.prototype.handlerDBError(null, 3);
 
     return bookPart;
   }

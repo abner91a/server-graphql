@@ -1,3 +1,4 @@
+import { Bookpart } from './../../bookparts/entities/bookpart.entity';
 import { Category } from './../../category/entities/category.entity';
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 
@@ -5,6 +6,7 @@ import { SchemaFactory, Prop } from '@nestjs/mongoose';
 import { Schema } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { Catype } from 'src/schema/category/dto/types/category.types';
+import { User } from 'src/schema/users/entities/user.entity';
 interface categoria {
   _id: string;
   name: string;
@@ -170,6 +172,10 @@ export class Book extends Document {
 
   @Field(() => String, {nullable: true, description: "Solo para obtener la imagen con cdn"})
   imageCDN: string;
+
+  userBook:User
+
+  chapter:Bookpart[]
 
   //isCompleted Todo agregar
 }

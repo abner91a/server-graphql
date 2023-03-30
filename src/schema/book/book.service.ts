@@ -15,16 +15,27 @@ import { Book } from './entities/book.entity';
 import { BookFilterException } from 'src/common/filters/book.filter';
 import { QueryArgs } from './dto/args/query.book.args';
 import { BookListResponse } from './types/bookCategoryResponse.types';
+import { PaginationArgs } from 'src/common/dto/args/pagination.args';
+import { QueryBookAdminArgs } from './dto/args/query.book.admin.args';
+import { UsersService } from '../users/users.service';
+import { BookpartsService } from '../bookparts/bookparts.service';
+import { Bookpart } from '../bookparts/entities/bookpart.entity';
 
 @Injectable()
 export class BookService {
   constructor(
     private readonly categoryService: CategoryService,
+    private readonly usersService: UsersService,
+
+    private readonly bookpartsService: BookpartsService,
+
+
     @InjectModel(Book.name)
     private readonly bookModel: Model<Book>,
   ) {}
 
-  //ADMIN
+    //////////////////////////////////////////////////////////////
+    /////////////////  ADMIN  ////////////////////////////////////
 
   async publishBookAdmin(
     createBookInput: CreateBookInputAdmin,
@@ -87,7 +98,60 @@ export class BookService {
     return book;
   }
 
-  ////////////USUARIO
+  async getBookPending( paginationArgs:PaginationArgs):Promise<BookListResponse> {
+    const { page, perPage } = paginationArgs;
+    const query = { 
+      isApproved: false,
+      // isActive: false
+    };
+    
+    const books = await this.bookModel.aggregate(
+      [ 
+        { $match: query },
+        { $sort: { updatedAt: 1 } },
+        { $skip: (page - 1) * perPage },
+        { $limit: perPage },
+
+      ]
+    )
+
+    const checkBook = await this.bookModel.countDocuments(query);
+    const totalPagina = Math.ceil(checkBook / perPage);
+
+    return {
+      book: books,
+      totalPagina
+    }
+  }
+
+  async getBookDetailAdmin(queryBookAdminArgs: QueryBookAdminArgs){
+    const { bookId } = queryBookAdminArgs;
+
+    const book = await this.findByIdBook(bookId);
+
+    return book
+  }
+
+  async getuserByBook(book:Book){
+    const { authorId } = book;
+    const existUser = await this.usersService.findOneByUserId(authorId);
+
+    return existUser;
+  }
+
+  async getChapterByBook( book:Book, paginationArgs:PaginationArgs ):Promise<Bookpart[]>{
+  
+
+    const chapters = await this.bookpartsService.getAllChapterByBook(book,paginationArgs );
+
+    return chapters;
+  
+   
+  }
+
+  /////////////////////////////////////////
+  ////////////USUARIO/////////////////////
+
   async publishBookByUser(createBookInput: CreateBookInput, user: User) {
     const existBook = await this.bookModel.findOne({
       title: createBookInput.title,

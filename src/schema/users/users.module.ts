@@ -4,6 +4,7 @@ import { UsersService } from './users.service';
 import { User, UserSchema } from './entities/user.entity';
 import { UsersResolverQueryAdmin } from './resolver';
 
+
 @Module({
   providers: [UsersResolverQueryAdmin, UsersService],
   exports: [UsersService],
@@ -14,6 +15,8 @@ import { UsersResolverQueryAdmin } from './resolver';
         schema: UserSchema,
       },
     ]),
+ 
+
   ],
 })
 export class UsersModule {}

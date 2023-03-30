@@ -1,6 +1,5 @@
 import { MongooseModule } from '@nestjs/mongoose';
-import { Module } from '@nestjs/common';
-import { BookpartsService } from './bookparts.service';
+import { forwardRef, Module } from '@nestjs/common';
 
 import { BookModule } from '../book/book.module';
 import { Bookpart, Bookpartchema } from './entities/bookpart.entity';
@@ -8,19 +7,24 @@ import {
   BookpartsMutationUserResolver,
   BookpartsMutationAdminResolver,
 } from './resolvers/mutation';
-import { BookpartsQueryResolver } from './resolvers/query/bookPart.resolver.query';
+import { BookpartsQueryAdminResolver } from './resolvers/query';
+import { BookpartsService } from './bookparts.service';
 
 @Module({
   providers: [
     BookpartsMutationUserResolver,
     BookpartsMutationAdminResolver,
-    BookpartsQueryResolver,
+    BookpartsQueryAdminResolver,
     BookpartsService,
   ],
+  exports: [BookpartsService],
   imports: [
     MongooseModule.forFeature([{ name: Bookpart.name, schema: Bookpartchema }]),
 
-    BookModule,
+    forwardRef(() => BookModule),
+    // BookModule,
+
   ],
+
 })
 export class BookpartsModule {}

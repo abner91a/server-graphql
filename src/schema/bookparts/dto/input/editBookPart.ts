@@ -23,7 +23,7 @@ export class EditBookPartUser {
     @MinLength(5)
     title:string;
   
-    @Field(() => String,{nullable: true})
+    @Field(() => String, {nullable: true})
     @IsOptional()
     @IsString()
     content:string;

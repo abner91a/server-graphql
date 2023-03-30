@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { BookService } from './book.service';
 
 import { CategoryModule } from '../category/category.module';
@@ -6,19 +6,24 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Book, BookSchema } from './entities/book.entity';
 import {
   BookResolverAdminMutation,
-
+  BookResolverAdminQuery,
   BookResolverUserMutation,
   BookResolverUserQuery,
 } from './book.resolver';
+import { UsersModule } from '../users/users.module';
+import { BookpartsModule } from '../bookparts/bookparts.module';
+
+
 
 @Module({
   providers: [
     BookResolverUserMutation,
-     BookResolverAdminMutation,
-     BookResolverUserQuery,
+    BookResolverAdminMutation,
+    BookResolverUserQuery,
+    BookResolverAdminQuery,
     BookService,
-    
   ],
+  exports: [BookService],
   imports: [
     MongooseModule.forFeature([
       {
@@ -26,8 +31,11 @@ import {
         schema: BookSchema,
       },
     ]),
+    // forwardRef(() => BookpartsModule),
+    BookpartsModule,
     CategoryModule,
-  ],
-  exports: [BookService],
+    UsersModule,
+   ],
+
 })
 export class BookModule {}

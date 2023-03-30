@@ -8,6 +8,6 @@ import { BookModule } from 'src/schema/book/book.module';
 @Module({
   controllers: [UploadController],
   providers: [UploadService],
-  imports: [CategoryModule,BookModule,ConfigModule]
+  imports: [CategoryModule, BookModule],
 })
 export class UploadModule {}

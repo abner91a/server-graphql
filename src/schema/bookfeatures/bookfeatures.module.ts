@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ReportBookMutation } from './resolver/mutation/reportBook.resolver.mutation';
 import { BookModule } from '../book/book.module';
 import { BookQueryResolver } from './resolver/query/reportBook.resolver.query';
+// import { BookpartsModule } from '../bookparts/bookparts.module';
 
 @Module({
   providers: [ReportBookMutation,BookQueryResolver, BookfeaturesService],
@@ -16,7 +17,8 @@ import { BookQueryResolver } from './resolver/query/reportBook.resolver.query';
         schema: ReportBookchema
       }
     ]),
-    BookModule
+    BookModule,
+    // BookpartsModule
   ]
 })
 export class BookfeaturesModule {}
