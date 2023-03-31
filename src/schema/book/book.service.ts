@@ -149,6 +149,15 @@ export class BookService {
    
   }
 
+
+
+  ////////////////////////// ADMIN BOOK
+
+  async getBookByUser(user: User) { 
+    console.log(user)
+
+  }
+
   /////////////////////////////////////////
   ////////////USUARIO/////////////////////
 

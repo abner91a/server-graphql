@@ -47,12 +47,14 @@ export class BookResolverAdminQuery {
     return await this.bookService.getuserByBook(book);
   }
 
+
   //Get chapter by bookId
   @ResolveField(() => [Bookpart], { name: 'chapter' })
   async chapters(
     @Parent() book: Book,
     @Args() paginationArgs: PaginationArgs,
     ) {
+ 
     return await this.bookService.getChapterByBook(book, paginationArgs);
   }
 }

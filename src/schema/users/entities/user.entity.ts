@@ -3,6 +3,7 @@ import { ObjectType, Field,ID } from '@nestjs/graphql';
 import { SchemaFactory,Prop } from '@nestjs/mongoose';
 import { Schema } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
+import { Book } from 'src/schema/book/entities/book.entity';
 
 @Schema()
 @ObjectType()
@@ -97,6 +98,8 @@ export class User extends Document {
   @Field(() => Date )
   updatedAt:boolean;
 
+  @Field(() => [Book])
+  book: Book[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -2,50 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  _id: ID!
-  email: String!
-  fullname: String!
-  roles: [String!]!
-  isActive: String!
-  isBlocked: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type AuthResponse {
-  token: String!
-  user: User!
-}
-
-type Category {
-  _id: ID!
-  name: String!
-  image: String
-  isActive: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-
-  """Solo para obtener la imagen con cdn"""
-  imageCDN: String
-}
-
-type CategoryAdminResponse {
-  categoria: [Category!]
-  totalCategory: Float
-}
-
-type CategoryUserResponse {
-  categoria: [Category!]
-  totalCategoria: Float
-  totalPage: Float
-}
-
 type Catype {
   _id: ID!
   name: String!
@@ -77,7 +33,57 @@ type Book {
   """Solo para obtener la imagen con cdn"""
   imageCDN: String
   getuserPanel: User!
-  chapter(page: Int = 1, perPage: Int = 1): [Bookpart!]!
+  chapter(page: Int!, perPage: Int!): [Bookpart!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type User {
+  _id: ID!
+  email: String!
+  fullname: String!
+  roles: [String!]!
+  isActive: String!
+  isBlocked: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  book: [Book!]!
+}
+
+type AuthResponse {
+  token: String!
+  user: User!
+}
+
+type UserResponse {
+  user: [User!]!
+  totalPagina: Float!
+}
+
+type Category {
+  _id: ID!
+  name: String!
+  image: String
+  isActive: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+
+  """Solo para obtener la imagen con cdn"""
+  imageCDN: String
+}
+
+type CategoryAdminResponse {
+  categoria: [Category!]
+  totalCategory: Float
+}
+
+type CategoryUserResponse {
+  categoria: [Category!]
+  totalCategoria: Float
+  totalPage: Float
 }
 
 type Bookpart {
@@ -127,7 +133,10 @@ type ReportListResponse {
 
 type Query {
   """Permite traer todo los usuarios de la BD - Rol administrador"""
-  getAllUser(query: UserAllQueryArgs!): [User!]!
+  getAllUserAdmin(page: Int = 1, perPage: Int = 1, isActive: Boolean! = true, search: String): UserResponse!
+
+  """Busca un usuario por Id"""
+  idUser(id: ID!): User!
 
   """Logea un usuario validado"""
   login(login: LoginInput!): AuthResponse!
@@ -147,19 +156,13 @@ type Query {
   getAllBook(query: QueryArgs!): BookListResponse!
 
   """Obtiene los libros pendientes para ser aprobados"""
-  getBookPending(page: Int = 1, perPage: Int = 1): BookListResponse!
+  getBookPending(page: Int!, perPage: Int!): BookListResponse!
 
   """Obtiene un libro por id"""
   getBookByIdAdmin(bookId: String!): Book!
 
   """Lista de Todo los reporte por query"""
   reportBookAll(query: QueryReportArgs!): ReportListResponse!
-}
-
-input UserAllQueryArgs {
-  page: Int! = 1
-  perPage: Int! = 1
-  search: String!
 }
 
 input LoginInput {
