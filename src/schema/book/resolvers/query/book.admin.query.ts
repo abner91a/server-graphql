@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Parent, Query, ResolveField, ResolveProperty, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from 'src/auth/decorator/current-user.decorator';
 import { ValidRoles } from 'src/auth/enum/rol.valido';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
@@ -42,10 +42,10 @@ export class BookResolverAdminQuery {
     return await this.bookService.getBookDetailAdmin(queryBookAdminArgs);
   }
 
-  @ResolveField(() => User, { name: 'getuserPanel' })
-  async user(@Parent() book: Book) {
-    return await this.bookService.getuserByBook(book);
-  }
+  // @ResolveProperty(() => User, { name: 'getuserPanel' })
+  // async user(@Parent() book: Book) {
+  //   return await this.bookService.getuserByBook(book);
+  // }
 
 
   //Get chapter by bookId

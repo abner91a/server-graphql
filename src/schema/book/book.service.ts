@@ -17,7 +17,6 @@ import { QueryArgs } from './dto/args/query.book.args';
 import { BookListResponse } from './types/bookCategoryResponse.types';
 import { PaginationArgs } from 'src/common/dto/args/pagination.args';
 import { QueryBookAdminArgs } from './dto/args/query.book.admin.args';
-import { UsersService } from '../users/users.service';
 import { BookpartsService } from '../bookparts/bookparts.service';
 import { Bookpart } from '../bookparts/entities/bookpart.entity';
 
@@ -25,8 +24,6 @@ import { Bookpart } from '../bookparts/entities/bookpart.entity';
 export class BookService {
   constructor(
     private readonly categoryService: CategoryService,
-    private readonly usersService: UsersService,
-
     private readonly bookpartsService: BookpartsService,
 
 
@@ -132,12 +129,6 @@ export class BookService {
     return book
   }
 
-  async getuserByBook(book:Book){
-    const { authorId } = book;
-    const existUser = await this.usersService.findOneByUserId(authorId);
-
-    return existUser;
-  }
 
   async getChapterByBook( book:Book, paginationArgs:PaginationArgs ):Promise<Bookpart[]>{
   

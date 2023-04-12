@@ -1,6 +1,6 @@
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id.pipes';
 import { UseGuards } from '@nestjs/common';
-import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ID, ResolveField, Parent } from '@nestjs/graphql';
 import { CurrentUser } from 'src/auth/decorator/current-user.decorator';
 import { ValidRoles } from 'src/auth/enum/rol.valido';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
@@ -10,6 +10,7 @@ import { UserAllQueryArgs } from '../dto/args';
 import { User } from '../entities/user.entity';
 import { UserResponse } from '../type/userResponse';
 import { UsersService } from '../users.service';
+import { Book } from 'src/schema/book/entities/book.entity';
 
 @UseGuards(JwtAuthGuard)
 @Resolver(() => User)
@@ -34,8 +35,16 @@ export class UsersResolverQueryAdmin {
     @Args('id', { type: () => ID }, ParseMongoIdPipe ) id: string,
   ): Promise<User> {
     return this.usersService.findUserById(id);
+  };
+
+  @ResolveField(()=> [Book])
+  async books(
+  // @CurrentUser([ValidRoles.admin]) user: User,
+    @Parent() user: User
+    ){ 
+    return this.usersService.findBooksByUser(user)
   }
-  
+
 
   // @Query(() => [User], {
   //   name: 'getAllUser',

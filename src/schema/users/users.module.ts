@@ -3,6 +3,10 @@ import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User, UserSchema } from './entities/user.entity';
 import { UsersResolverQueryAdmin } from './resolver';
+import { UserBookModule } from 'src/services-global/user-book/user-book.module';
+import { UserBookService } from 'src/services-global/user-book/user-book.service';
+
+
 
 
 @Module({
@@ -15,8 +19,7 @@ import { UsersResolverQueryAdmin } from './resolver';
         schema: UserSchema,
       },
     ]),
- 
-
+    // UserBookModule
   ],
 })
 export class UsersModule {}

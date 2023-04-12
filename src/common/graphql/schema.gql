@@ -2,6 +2,33 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type User {
+  _id: ID!
+  email: String!
+  fullname: String!
+  roles: [String!]!
+  isActive: String!
+  isBlocked: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  books: [Book!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type AuthResponse {
+  token: String!
+  user: User!
+}
+
+type UserResponse {
+  user: [User!]!
+  totalPagina: Float!
+}
+
 type Catype {
   _id: ID!
   name: String!
@@ -32,35 +59,7 @@ type Book {
 
   """Solo para obtener la imagen con cdn"""
   imageCDN: String
-  getuserPanel: User!
   chapter(page: Int!, perPage: Int!): [Bookpart!]!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type User {
-  _id: ID!
-  email: String!
-  fullname: String!
-  roles: [String!]!
-  isActive: String!
-  isBlocked: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  book: [Book!]!
-}
-
-type AuthResponse {
-  token: String!
-  user: User!
-}
-
-type UserResponse {
-  user: [User!]!
-  totalPagina: Float!
 }
 
 type Category {

@@ -16,6 +16,12 @@ import { BookModule } from './schema/book/book.module';
 import GraphQLJSON, { GraphQLJSONObject  } from 'graphql-type-json';
 import { BookfeaturesModule } from './schema/bookfeatures/bookfeatures.module';
 import { BookpartsModule } from './schema/bookparts/bookparts.module';
+import { UserBookModule } from './services-global/user-book/user-book.module';
+
+
+
+
+
 
 
 @Module({
@@ -44,6 +50,8 @@ import { BookpartsModule } from './schema/bookparts/bookparts.module';
     BookModule,
     BookfeaturesModule,
     BookpartsModule,
+    UserBookModule,
+    
   ],
   controllers: [AppController],
   providers: [AppService],

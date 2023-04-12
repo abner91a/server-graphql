@@ -14,6 +14,7 @@ import { PaginationArgs } from 'src/common/dto/args/pagination.args';
 import { QueryUserAdminArgs } from 'src/common/dto/args/queryUserAdmin.args';
 import { UserResponse } from './type/userResponse';
 import { BookService } from '../book/book.service';
+import { UserBookService } from 'src/services-global/user-book/user-book.service';
 
 @Injectable()
 export class UsersService {
@@ -22,7 +23,9 @@ export class UsersService {
   constructor(
     @InjectModel(User.name)
     private readonly userModel: Model<User>,
-    // private readonly bookService: BookService,
+    //  private readonly bookService: BookService,
+
+    // private readonly userBookService: UserBookService,
 
   ) {}
 
@@ -93,6 +96,13 @@ export class UsersService {
 
     return user;
   }
+
+  async findBooksByUser(user:User){
+   
+
+
+
+   }
 
   /*   USUARIO  */
 

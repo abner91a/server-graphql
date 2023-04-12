@@ -34,7 +34,7 @@ import { BookpartsModule } from '../bookparts/bookparts.module';
     // forwardRef(() => BookpartsModule),
     BookpartsModule,
     CategoryModule,
-    UsersModule,
+     //UsersModule,
    ],
 
 })

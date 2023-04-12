@@ -98,7 +98,7 @@ export class User extends Document {
   @Field(() => Date )
   updatedAt:boolean;
 
-  @Field(() => [Book])
+  // @Field(() => [Book])
   book: Book[];
 }
 
